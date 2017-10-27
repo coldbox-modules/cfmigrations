@@ -11,21 +11,21 @@ Here's a simple example of that using simple `queryExecute`:
 ```cfc
 component {
 
-	function up() {
-		queryExecute( "
-			CREATE TABLE `users` (
-				`id` INT UNSIGNED AUTO_INCREMENT,
-				`email` VARCHAR(255) NOT NULL,
-				`password` VARCHAR(255) NOT NULL
-			)
-		" );
-	}
+    function up() {
+        queryExecute( "
+            CREATE TABLE `users` (
+                `id` INT UNSIGNED AUTO_INCREMENT,
+                `email` VARCHAR(255) NOT NULL,
+                `password` VARCHAR(255) NOT NULL
+            )
+        " );
+    }
 
-	function down() {
-		queryExecute( "
-			DROP TABLE `users`
-		" );
-	}
+    function down() {
+        queryExecute( "
+            DROP TABLE `users`
+        " );
+    }
 
 }
 ```
@@ -50,6 +50,26 @@ If you find a need to, you can uninstall the migrations table by calling the `un
 ### Migration Files
 
 A migration file is a component with two methods `up` and `down`.  The function `up` should define how to apply the migration.  The function `down` should define how to undo the change down in `up`.  The `up` and `down` functions are passed an instance of `SchemaBuilder@qb` as the only argument.  To learn more about the functionality and benefits of `SchemaBuilder` and `qb`, please [read the documentation here.](https://elpete.gitbooks.io/qb/content/schema/)  In brief, `qb` and `SchemaBuilder` offers a fluent, expressive syntax that can be compiled to many different database grammars, providing both readability and flexibility.
+
+Here's the same example as above using qb's `SchemaBuilder`:
+
+```cfc
+component {
+
+    function up( SchemaBuilder schema ) {
+    	schema.create( "users", function( Blueprint table ) {
+	    table.increments( "id" );
+	    table.string( "email" );
+	    table.string( "password" );
+	} );
+    }
+
+    function down( SchemaBuilder schema ) {
+        schema.drop( "users" );
+    }
+
+}
+```
 
 Migration files need to follow a specific naming convention — `YYYY_MM_DD_HHMISS_[describe_your_changes_here].cfc`.  This is how `cfmigrations` knows in what order to run your migrations.  Generating these files is made easier with the `migrate create` command from `commandbox-migrations`.
 
