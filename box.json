@@ -1,0 +1,40 @@
+{
+    "name":"CFMigrations",
+    "version":"0.0.0",
+    "author":"Eric Peterson",
+    "homepage":"https://github.com/elpete/cfmigrations",
+    "documentation":"https://github.com/elpete/cfmigrations",
+    "repository":{
+        "type":"git",
+        "url":"https://github.com/elpete/cfmigrations"
+    },
+    "bugs":"https://github.com/elpete/cfmigrations/issues",
+    "slug":"cfmigrations",
+    "shortDescription":"Keep track and run your database migrations with CFML",
+    "instructions":"https://github.com/elpete/cfmigrations",
+    "type":"modules",
+    "keywords":[
+        "server",
+        "database",
+        "migrations",
+        "schema"
+    ],
+    "scripts":{
+        "postVersion":"package set location='elpete/cfmigrations#v`package version`'",
+        "onRelease":"publish",
+        "postPublish":"!git push && !git push --tags"
+    },
+    "private":false,
+    "license":[
+        {
+            "type":"MIT",
+            "URL":"https://github.com/elpete/cfmigrations/blob/master/LICENSE"
+        }
+    ],
+    "dependencies":{
+        "qb":"^5.0.0"
+    },
+    "installPaths":{
+        "qb":"modules/qb"
+    }
+}
