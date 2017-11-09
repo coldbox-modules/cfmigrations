@@ -201,7 +201,11 @@ component singleton accessors="true" {
             wirebox.getInstance( "#defaultGrammar#@qb" )
         );
 
-        migrationMethod( schema );
+        var query = wirebox.getInstance( "QueryBuilder@qb" ).setGrammar(
+            wirebox.getInstance( "#defaultGrammar#@qb" )
+        );
+
+        migrationMethod( schema, query );
 
         logMigration( direction, migrationStruct.componentPath );
 
