@@ -66,19 +66,16 @@ component singleton accessors="true" {
             return object.type == "File" && right( object.name, 4 ) == ".cfc";
         } );
 
+        arraySort( onlyCFCs, function( a, b ) {
+            return dateCompare(
+                extractTimestampFromFileName( a.name ),
+                extractTimestampFromFileName( b.name )
+            );
+        } );
+
         var prequisitesInstalled = true;
         var migrations = arrayMap( onlyCFCs, function( file ) {
-            var timestampString = left( file.name, 17 );
-            var timestampParts = listToArray( timestampString, "_" );
-            var timestamp = createDateTime(
-                timestampParts[1],
-                timestampParts[2],
-                timestampParts[3],
-                mid( timestampParts[ 4 ], 1, 2 ),
-                mid( timestampParts[ 4 ], 3, 2 ),
-                mid( timestampParts[ 4 ], 5, 2 )
-            );
-
+            var timestamp = extractTimestampFromFileName( file.name );
             var componentName = left( file.name, len( file.name ) - 4 );
             var migrationRan = migrationTableInstalled ? isMigrationRan( componentName ) : false;
 
@@ -257,6 +254,19 @@ component singleton accessors="true" {
                 { datasource = getDatasource() }
             );
         }
+    }
+
+    private any function extractTimestampFromFileName( fileName ) {
+        var timestampString = left( fileName, 17 );
+        var timestampParts = listToArray( timestampString, "_" );
+        return createDateTime(
+            timestampParts[1],
+            timestampParts[2],
+            timestampParts[3],
+            mid( timestampParts[ 4 ], 1, 2 ),
+            mid( timestampParts[ 4 ], 3, 2 ),
+            mid( timestampParts[ 4 ], 5, 2 )
+        );
     }
 
 }
