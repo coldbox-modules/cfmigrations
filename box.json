@@ -1,6 +1,6 @@
 {
     "name":"CFMigrations",
-    "version":"1.1.1",
+    "version":"1.1.2",
     "author":"Eric Peterson",
     "homepage":"https://github.com/elpete/cfmigrations",
     "documentation":"https://github.com/elpete/cfmigrations",
@@ -37,5 +37,5 @@
     "installPaths":{
         "qb":"modules/qb"
     },
-    "location":"elpete/cfmigrations#v1.1.1"
+    "location":"elpete/cfmigrations#v1.1.2"
 }
