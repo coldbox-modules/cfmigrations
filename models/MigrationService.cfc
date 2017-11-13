@@ -202,11 +202,18 @@ component singleton accessors="true" {
             wirebox.getInstance( "#defaultGrammar#@qb" )
         );
 
-        migrationMethod( schema, query );
+        transaction action="begin" {
+            try {
+                migrationMethod( schema, query );
+                logMigration( direction, migrationStruct.componentPath );
+                callback( migrationStruct );
+            }
+            catch ( any e ) {
+                transaction action="rollback";
+                rethrow;
+            }
+        }
 
-        logMigration( direction, migrationStruct.componentPath );
-
-        callback( migrationStruct );
     }
 
     private boolean function isMigrationRan( componentName ) {
