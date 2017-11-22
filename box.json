@@ -1,17 +1,17 @@
 {
     "name":"CFMigrations",
-    "version":"1.1.2",
+    "version":"1.1.3",
     "author":"Eric Peterson",
-    "homepage":"https://github.com/elpete/cfmigrations",
-    "documentation":"https://github.com/elpete/cfmigrations",
+    "homepage":"https://github.com/coldbox-modules/cfmigrations",
+    "documentation":"https://github.com/coldbox-modules/cfmigrations",
     "repository":{
         "type":"git",
-        "url":"https://github.com/elpete/cfmigrations"
+        "url":"https://github.com/coldbox-modules/cfmigrations"
     },
-    "bugs":"https://github.com/elpete/cfmigrations/issues",
+    "bugs":"https://github.com/coldbox-modules/cfmigrations/issues",
     "slug":"cfmigrations",
     "shortDescription":"Keep track and run your database migrations with CFML",
-    "instructions":"https://github.com/elpete/cfmigrations",
+    "instructions":"https://github.com/coldbox-modules/cfmigrations",
     "type":"modules",
     "keywords":[
         "server",
@@ -20,7 +20,7 @@
         "schema"
     ],
     "scripts":{
-        "postVersion":"package set location='elpete/cfmigrations#v`package version`'",
+        "postVersion":"package set location='coldbox-modules/cfmigrations#v`package version`'",
         "onRelease":"publish",
         "postPublish":"!git push && !git push --tags"
     },
@@ -28,7 +28,7 @@
     "license":[
         {
             "type":"MIT",
-            "URL":"https://github.com/elpete/cfmigrations/blob/master/LICENSE"
+            "URL":"https://github.com/coldbox-modules/cfmigrations/blob/master/LICENSE"
         }
     ],
     "dependencies":{
@@ -37,5 +37,5 @@
     "installPaths":{
         "qb":"modules/qb"
     },
-    "location":"elpete/cfmigrations#v1.1.2"
+    "location":"coldbox-modules/cfmigrations#v1.1.3"
 }
