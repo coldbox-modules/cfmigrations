@@ -167,6 +167,13 @@ component singleton accessors="true" {
         queryExecute( "DROP TABLE cfmigrations", {}, { datasource = getDatasource() } );
     }
 
+    public void function reset() {
+        var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar(
+            wirebox.getInstance( "#defaultGrammar#@qb" )
+        );
+        schema.dropAllObjects( { datasource = getDatasource() } );
+    }
+
     public boolean function isMigrationTableInstalled() {
         cfdbinfo( name = "results" type = "Tables", datasource = getDatasource() );
         for ( var row in results ) {
