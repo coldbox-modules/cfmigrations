@@ -1,6 +1,6 @@
 {
     "name":"CFMigrations",
-    "version":"1.2.0",
+    "version":"1.2.1",
     "author":"Eric Peterson",
     "homepage":"https://github.com/coldbox-modules/cfmigrations",
     "documentation":"https://github.com/coldbox-modules/cfmigrations",
@@ -37,5 +37,5 @@
     "installPaths":{
         "qb":"modules/qb"
     },
-    "location":"coldbox-modules/cfmigrations#v1.2.0"
+    "location":"coldbox-modules/cfmigrations#v1.2.1"
 }
