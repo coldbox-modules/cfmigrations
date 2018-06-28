@@ -143,7 +143,7 @@ component singleton accessors="true" {
         queryExecute(
             "
                 CREATE TABLE cfmigrations (
-                    name VARCHAR(200) NOT NULL,
+                    name VARCHAR(190) NOT NULL,
                     migration_ran #getDateTimeColumnType()# NOT NULL,
                     PRIMARY KEY (name)
                 )
