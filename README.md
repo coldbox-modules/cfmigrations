@@ -100,3 +100,55 @@ Run all available migrations in the desired direction.
 #### `reset`
 
 Returns the database to an empty state by dropping all objects.
+
+### Tips and tricks
+
+#### Default values in MS SQL server
+
+MS SQL server requires some special treatment when removing columns with default values. Even though syntax is almost the same, MS SQL creates a special default constraint like `DF_tablename_columname`. When migrating down, this constraint has to be removed before dropping the column. In other grammars no special named constraint is created.
+
+Example:
+```cfc
+component {
+    
+    function up( schema, query   ) {
+        schema.alter( "users", function ( table ) {
+            table.addColumn( table.boolean( "hassuperpowers").default(0) );
+        }); 
+    }
+
+    function down( schema, query  ) {
+        schema.alter( "users", function( table ) {
+            table.dropConstraint( "DF_users_hassuperpowers");
+            table.dropColumn( "hassuperpowers" ) ;
+        } );
+    }
+
+}
+```
+ 
+
+#### Updating database content in a migration file
+
+Sometimes you want to do multiple content updates or inserts in a migration. In this case you can use the QueryBuilder for the updates. When doing your second update you have to reset the Querybuilder object by using the newQuery method.
+
+Example:
+
+```cfc
+component {
+
+    function up( SchemaBuilder schema, QueryBuilder query ) {
+	query.from('users')
+	    .where( "username", "superuser")
+	    .update( {"hassuperpowers" = true} )
+	query.newQuery().from('users') 
+	    .where('username','RandomUser')	
+	    .update( {"hassuperpowers" = false} )
+    }
+
+    function down( SchemaBuilder schema, QueryBuilder query ) {
+        ......
+    }
+
+}
+```
