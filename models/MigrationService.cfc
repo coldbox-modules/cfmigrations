@@ -175,7 +175,7 @@ component singleton accessors="true" {
     }
 
     public boolean function isMigrationTableInstalled() {
-        cfdbinfo( name = "results" type = "Tables", datasource = getDatasource() );
+        cfdbinfo( name = "results", type = "Tables", datasource = getDatasource() );
         for ( var row in results ) {
             if ( row.table_name == "cfmigrations" ) {
                 return true;
@@ -242,7 +242,7 @@ component singleton accessors="true" {
     }
 
     private string function getDateTimeColumnType() {
-        cfdbinfo( name = "results" type = "Version", datasource = getDatasource() );
+        cfdbinfo( name = "results", type = "Version", datasource = getDatasource() );
 
         switch( results.database_productName ) {
             case "PostgreSQL"           : return "TIMESTAMP";

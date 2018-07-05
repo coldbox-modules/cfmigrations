@@ -2,3 +2,6 @@ modules
 testbox
 
 jmimemagic.log
+
+#IntelliJ
+.idea
