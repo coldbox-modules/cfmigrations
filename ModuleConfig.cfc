@@ -16,7 +16,7 @@ component {
 
         binder.map( "MigrationService@cfmigrations" )
             .to( "#moduleMapping#.models.MigrationService" )
-            .initArg( name = "defaultGrammar", ref = "#settings.defaultGrammar#@qb" )
+            .initArg( name = "defaultGrammar", ref = "#settings.defaultGrammar#@qb" );
     }
 
 }
