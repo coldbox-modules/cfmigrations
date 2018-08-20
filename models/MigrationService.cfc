@@ -3,7 +3,7 @@ component singleton accessors="true" {
     property name="wirebox" inject="wirebox";
     property name="migrationsDirectory";
     property name="datasource";
-    property name="defaultGrammar" default="BaseGrammar";
+    property name="schema" inject="SchemaBuilder@qb";
 
     /**
     * Run the next available migration in the desired direction.
@@ -140,10 +140,6 @@ component singleton accessors="true" {
             return;
         }
 
-        var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar(
-            wirebox.getInstance( "#defaultGrammar#@qb" )
-        );
-
         schema.create( "cfmigrations", function( table ) {
             table.string( "name", 190 ).primaryKey();
             table.datetime( "migration_ran" );
@@ -165,17 +161,10 @@ component singleton accessors="true" {
     }
 
     public void function reset() {
-        var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar(
-            wirebox.getInstance( "#defaultGrammar#@qb" )
-        );
         schema.dropAllObjects( { datasource = getDatasource() } );
     }
 
     public boolean function isMigrationTableInstalled() {
-        var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar(
-            wirebox.getInstance( "#defaultGrammar#@qb" )
-        );
-
         return schema.hasTable( "cfmigrations" );
     }
 
@@ -196,13 +185,7 @@ component singleton accessors="true" {
         var migration = wirebox.getInstance( migrationStruct.componentPath );
         var migrationMethod = migration[ direction ];
 
-        var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar(
-            wirebox.getInstance( "#defaultGrammar#@qb" )
-        );
-
-        var query = wirebox.getInstance( "QueryBuilder@qb" ).setGrammar(
-            wirebox.getInstance( "#defaultGrammar#@qb" )
-        );
+        var query = wirebox.getInstance( "QueryBuilder@qb" );
 
         transaction action="begin" {
             try {
