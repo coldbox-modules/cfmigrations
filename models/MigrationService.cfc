@@ -140,17 +140,14 @@ component singleton accessors="true" {
             return;
         }
 
-        queryExecute(
-            "
-                CREATE TABLE cfmigrations (
-                    name VARCHAR(190) NOT NULL,
-                    migration_ran #getDateTimeColumnType()# NOT NULL,
-                    PRIMARY KEY (name)
-                )
-            ",
-            {},
-            { datasource = getDatasource() }
+        var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar(
+            wirebox.getInstance( "#defaultGrammar#@qb" )
         );
+
+        schema.create( "cfmigrations", function( table ) {
+            table.string( "name", 190 ).primaryKey();
+            table.datetime( "migration_ran" );
+        } );
 
         if ( runAll ) {
             runAllMigrations( "up" );
@@ -175,13 +172,11 @@ component singleton accessors="true" {
     }
 
     public boolean function isMigrationTableInstalled() {
-        cfdbinfo( name = "results", type = "Tables", datasource = getDatasource() );
-        for ( var row in results ) {
-            if ( row.table_name == "cfmigrations" ) {
-                return true;
-            }
-        }
-        return false;
+        var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar(
+            wirebox.getInstance( "#defaultGrammar#@qb" )
+        );
+
+        return schema.hasTable( "cfmigrations" );
     }
 
     public void function runMigration( direction, migrationStruct, callback ) {
@@ -239,18 +234,6 @@ component singleton accessors="true" {
             }
         }
         return false;
-    }
-
-    private string function getDateTimeColumnType() {
-        cfdbinfo( name = "results", type = "Version", datasource = getDatasource() );
-
-        switch( results.database_productName ) {
-            case "PostgreSQL"           : return "TIMESTAMP";
-            case "MySQL"                : return "DATETIME";
-            case "Microsoft SQL Server" : return "DATETIME";
-            case "Oracle"               : return "DATE";
-            default                     : return "DATETIME";
-        }
     }
 
     private void function logMigration( direction, componentPath ) {
