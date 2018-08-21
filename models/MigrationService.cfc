@@ -3,7 +3,7 @@ component singleton accessors="true" {
     property name="wirebox" inject="wirebox";
     property name="migrationsDirectory";
     property name="datasource";
-    property name="defaultGrammar" default="BaseGrammar";
+    property name="defaultGrammar" default="AutoDiscover";
 
     /**
     * Run the next available migration in the desired direction.
