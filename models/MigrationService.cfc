@@ -4,6 +4,7 @@ component singleton accessors="true" {
     property name="migrationsDirectory";
     property name="datasource";
     property name="defaultGrammar" default="AutoDiscover";
+    property name="schema" default="";
 
     /**
     * Run the next available migration in the desired direction.
@@ -176,7 +177,7 @@ component singleton accessors="true" {
             wirebox.getInstance( "#defaultGrammar#@qb" )
         );
 
-        return schema.hasTable( "cfmigrations" );
+        return schema.hasTable( "cfmigrations", getSchema() );
     }
 
     public void function runMigration( direction, migrationStruct, callback ) {
