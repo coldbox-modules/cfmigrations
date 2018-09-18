@@ -45,6 +45,12 @@ In order to track which migrations have been ran, `cfmigrations` needs to instal
 
 If you find a need to, you can uninstall the migrations table by calling the `uninstall()` method or by running `migrate uninstall` from `commandbox-migrations`. Running this method will rollback all ran migrations before dropping the `cfmigrations` table.
 
+### Setting Schema
+
+It's important to set the `schema` attribute for `cfmigrations`.  Without it, `cfmigrations` can't tell the difference
+between a migration table installed in the schema you want and any other schema on the same database.  You can
+set the schema by calling the `setSchema( string schema )` method.
+
 ### Migration Files
 
 A migration file is a component with two methods `up` and `down`. The function `up` should define how to apply the migration. The function `down` should define how to undo the change down in `up`. The `up` and `down` functions are passed an instance of `SchemaBuilder@qb` and `QueryBuilder@qb` as arguments. To learn more about the functionality and benefits of `SchemaBuilder`, `QueryBuilder`, and `qb`, please [read the documentation here.](https://elpete.gitbooks.io/qb/content/) In brief, `qb` offers a fluent, expressive syntax that can be compiled to many different database grammars, providing both readability and flexibility.
@@ -110,11 +116,11 @@ MS SQL server requires some special treatment when removing columns with default
 Example:
 ```cfc
 component {
-    
+
     function up( schema, query   ) {
         schema.alter( "users", function ( table ) {
             table.addColumn( table.boolean( "hassuperpowers").default(0) );
-        }); 
+        });
     }
 
     function down( schema, query  ) {
@@ -126,7 +132,7 @@ component {
 
 }
 ```
- 
+
 
 #### Updating database content in a migration file
 
@@ -141,8 +147,8 @@ component {
 	query.from('users')
 	    .where( "username", "superuser")
 	    .update( {"hassuperpowers" = true} )
-	query.newQuery().from('users') 
-	    .where('username','RandomUser')	
+	query.newQuery().from('users')
+	    .where('username','RandomUser')
 	    .update( {"hassuperpowers" = false} )
     }
 
