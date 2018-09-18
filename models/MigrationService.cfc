@@ -58,7 +58,7 @@ component singleton accessors="true" {
     public array function findAll() {
         var migrationTableInstalled = isMigrationTableInstalled();
 
-        var objectsQuery = directoryList( path = expandPath( migrationsDirectory ), listInfo = "query" );
+        var objectsQuery = directoryList( expandPath( migrationsDirectory ), false,  "query" );
         var objectsArray = [];
         for ( var row in objectsQuery ) {
             arrayAppend( objectsArray, row );
