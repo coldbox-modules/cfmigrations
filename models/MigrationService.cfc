@@ -64,7 +64,7 @@ component singleton accessors="true" {
             arrayAppend( objectsArray, row );
         }
         var onlyCFCs = arrayFilter( objectsArray, function( object ) {
-            return object.type == "File" && right( object.name, 4 ) == ".cfc";
+            return object.type == "File" && right( object.name, 4 ) == ".cfc" && isMigrationFile( object.name );
         } );
 
         arraySort( onlyCFCs, function( a, b ) {
@@ -252,6 +252,12 @@ component singleton accessors="true" {
                 { datasource = getDatasource() }
             );
         }
+    }
+
+    private boolean function isMigrationFile( filename ){
+        return isDate(
+            replace( left( filename, 10 ), "_", "-", "all" )
+        );
     }
 
     private any function extractTimestampFromFileName( fileName ) {
