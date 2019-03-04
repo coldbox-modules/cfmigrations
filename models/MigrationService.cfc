@@ -10,18 +10,21 @@ component singleton accessors="true" {
     * Run the next available migration in the desired direction.
     *
     * @direction The direction in which to look for the next available migration — `up` or `down`.
-    * @callback  A callback to execute after the ran migration, if any.
+    * @postProcessHook  A callback to run after running each migration.
+    * @preProcessHook  A callback to run before running each migration.
     *
     * @return    The ran migration information struct
     */
-    public struct function runNextMigration( required string direction, callback ) {
-        if ( isNull( callback ) ) { callback = function() {}; }
+    public struct function runNextMigration( required string direction, postProcessHook, preProcessHook ) {
+        if ( isNull( postProcessHook ) ) { postProcessHook = function() {}; }
+        if ( isNull( preProcessHook ) ) { preProcessHook = function() {}; }
+
         var migrations = findAll();
 
         for ( var migration in migrations ) {
             var canMigrateInDirection = migration[ "canMigrate#direction#" ];
             if ( canMigrateInDirection ) {
-                runMigration( arguments.direction, migration, callback );
+                runMigration( arguments.direction, migration, postProcessHook, preProcessHook );
                 return migration;
             }
         }
@@ -33,25 +36,29 @@ component singleton accessors="true" {
     * Run all available migrations in the desired direction.
     *
     * @direction The direction for which to run the available migrations — `up` or `down`.
-    * @callback  A callback to run after running each migration.
+    * @postProcessHook  A callback to run after running each migration.
+    * @preProcessHook  A callback to run before running each migration.
     *
     * @return    void
     */
-    public void function runAllMigrations( direction, callback ) {
-        if ( isNull( callback ) ) { callback = function() {}; }
+    public void function runAllMigrations( direction, postProcessHook, preProcessHook ) {
+        if ( isNull( postProcessHook ) ) { postProcessHook = function() {}; }
+        if ( isNull( preProcessHook ) ) { preProcessHook = function() {}; }
+
         var migrations = arrayFilter( findAll(), function( migration ) {
             return direction == "up" ? !migration.migrated : migration.migrated;
         } );
 
         if ( direction == "down" ) {
             // sort in reversed order to get which migrations can be brought down
+            // cannot use arrayReverse since it is Lucee only
             arraySort( migrations, function( a, b ) {
                 return dateCompare( b.timestamp, a.timestamp );
             } );
         }
 
         arrayEach( migrations, function( migration ) {
-            runMigration( direction, migration, callback );
+            runMigration( direction, migration, postProcessHook, preProcessHook );
         } );
     }
 
@@ -64,7 +71,9 @@ component singleton accessors="true" {
             arrayAppend( objectsArray, row );
         }
         var onlyCFCs = arrayFilter( objectsArray, function( object ) {
-            return object.type == "File" && right( object.name, 4 ) == ".cfc" && isMigrationFile( object.name );
+            return object.type == "File" &&
+                right( object.name, 4 ) == ".cfc" &&
+                isMigrationFile( object.name );
         } );
 
         arraySort( onlyCFCs, function( a, b ) {
@@ -180,7 +189,7 @@ component singleton accessors="true" {
         return schema.hasTable( "cfmigrations", getSchema() );
     }
 
-    public void function runMigration( direction, migrationStruct, callback ) {
+    public void function runMigration( direction, migrationStruct, postProcessHook, preProcessHook ) {
         install();
 
         var componentName = replaceNoCase( migrationStruct.componentPath, migrationsDirectory & "/", "" );
@@ -195,7 +204,6 @@ component singleton accessors="true" {
         }
 
         var migration = wirebox.getInstance( migrationStruct.componentPath );
-        var migrationMethod = migration[ direction ];
 
         var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar(
             wirebox.getInstance( "#defaultGrammar#@qb" )
@@ -205,17 +213,18 @@ component singleton accessors="true" {
             wirebox.getInstance( "#defaultGrammar#@qb" )
         );
 
+        preProcessHook( migrationStruct );
         transaction action="begin" {
             try {
-                migrationMethod( schema, query );
+                invoke( migration, direction, [ schema, query ] );
                 logMigration( direction, migrationStruct.componentPath );
-                callback( migrationStruct );
             }
             catch ( any e ) {
                 transaction action="rollback";
                 rethrow;
             }
         }
+        postProcessHook( migrationStruct );
 
     }
 
