@@ -178,7 +178,10 @@ component singleton accessors="true" {
         var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar(
             wirebox.getInstance( "#defaultGrammar#@qb" )
         );
-        schema.dropAllObjects( { datasource = getDatasource() } );
+        schema.dropAllObjects(
+            options = { datasource = getDatasource() }
+            schema = getSchema()
+        );
     }
 
     public boolean function isMigrationTableInstalled() {
