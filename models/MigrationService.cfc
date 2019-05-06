@@ -179,7 +179,7 @@ component singleton accessors="true" {
             wirebox.getInstance( "#defaultGrammar#@qb" )
         );
         schema.dropAllObjects(
-            options = { datasource = getDatasource() }
+            options = { datasource = getDatasource() },
             schema = getSchema()
         );
     }
