@@ -92,7 +92,8 @@ Run the next available migration in the desired direction.
 | Name      | Type     | Required | Default         | Description                                                                       |
 | --------- | -------- | -------- | --------------- | --------------------------------------------------------------------------------- |
 | direction | String   | `true`   |                 | The direction in which to look for the next available migration — `up` or `down`. |
-| callback  | function | `false`  | `function() {}` | A callback to run after running the migration.                                    |
+| postProcessHook  | function | `false`  | `function() {}` | A callback to run *after* running the migration.                                    |
+| preProcessHook   | function | `false`  | `function() {}` | A callback to run *before* running the migration.                                    |
 
 #### `runAllMigrations`
 
@@ -101,7 +102,8 @@ Run all available migrations in the desired direction.
 | Name      | Type     | Required | Default         | Description                                                               |
 | --------- | -------- | -------- | --------------- | ------------------------------------------------------------------------- |
 | direction | String   | `true`   |                 | The direction for which to run the available migrations — `up` or `down`. |
-| callback  | function | `false`  | `function() {}` | A callback to run after running each migration.                           |
+| postProcessHook  | function | `false`  | `function() {}` | A callback to run *after* running each migration.                                    |
+| preProcessHook   | function | `false`  | `function() {}` | A callback to run *before* running each migration.                                    |
 
 #### `reset`
 
