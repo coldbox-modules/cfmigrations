@@ -53,7 +53,7 @@ set the schema by calling the `setSchema( string schema )` method.
 
 ### Migration Files
 
-A migration file is a component with two methods `up` and `down`. The function `up` should define how to apply the migration. The function `down` should define how to undo the change down in `up`. The `up` and `down` functions are passed an instance of `SchemaBuilder@qb` and `QueryBuilder@qb` as arguments. To learn more about the functionality and benefits of `SchemaBuilder`, `QueryBuilder`, and `qb`, please [read the documentation here.](https://elpete.gitbooks.io/qb/content/) In brief, `qb` offers a fluent, expressive syntax that can be compiled to many different database grammars, providing both readability and flexibility.
+A migration file is a component with two methods `up` and `down`. The function `up` should define how to apply the migration. The function `down` should define how to undo the change down in `up`. The `up` and `down` functions are passed an instance of `SchemaBuilder@qb` and `QueryBuilder@qb` as arguments. To learn more about the functionality and benefits of `SchemaBuilder`, `QueryBuilder`, and `qb`, please [read the QB documentation here](https://qb.ortusbooks.com/). In brief, `qb` offers a fluent, expressive syntax that can be compiled to many different database grammars, providing both readability and flexibility.
 
 Here's the same example as above using qb's `SchemaBuilder`:
 
