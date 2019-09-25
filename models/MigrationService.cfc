@@ -5,6 +5,7 @@ component singleton accessors="true" {
     property name="datasource";
     property name="defaultGrammar" default="AutoDiscover";
     property name="schema" default="";
+    property name="migrationsTable" default="cfmigrations";
 
     /**
     * Run the next available migration in the desired direction.
@@ -154,10 +155,10 @@ component singleton accessors="true" {
             wirebox.getInstance( "#defaultGrammar#@qb" )
         );
 
-        schema.create( "cfmigrations", function( table ) {
+        schema.create( getMigrationsTable(), function( table ) {
             table.string( "name", 190 ).primaryKey();
             table.datetime( "migration_ran" );
-        } );
+        }, { datasource = getDatasource() } );
 
         if ( runAll ) {
             runAllMigrations( "up" );
@@ -171,7 +172,7 @@ component singleton accessors="true" {
 
         runAllMigrations( "down" );
 
-        queryExecute( "DROP TABLE cfmigrations", {}, { datasource = getDatasource() } );
+        queryExecute( "DROP TABLE #getMigrationsTable()#", {}, { datasource = getDatasource() } );
     }
 
     public void function reset() {
@@ -189,7 +190,7 @@ component singleton accessors="true" {
             wirebox.getInstance( "#defaultGrammar#@qb" )
         );
 
-        return schema.hasTable( "cfmigrations", getSchema() );
+        return schema.hasTable( getMigrationsTable(), getSchema(), { datasource = getDatasource() } );
     }
 
     public void function runMigration( direction, migrationStruct, postProcessHook, preProcessHook ) {
@@ -235,7 +236,7 @@ component singleton accessors="true" {
         var migrations = queryExecute(
             "
                 SELECT name
-                FROM cfmigrations
+                FROM #getMigrationsTable()#
             ",
             {},
             { datasource = getDatasource() }
@@ -253,13 +254,13 @@ component singleton accessors="true" {
         var componentName = replaceNoCase( componentPath, migrationsDirectory & "/", "" );
         if ( direction == "up" ) {
             queryExecute(
-                "INSERT INTO cfmigrations VALUES ( :name, :time )",
+                "INSERT INTO #getMigrationsTable()# VALUES ( :name, :time )",
                 { name = componentName, time = { value = now(), cfsqltype = "CF_SQL_TIMESTAMP" } },
                 { datasource = getDatasource() }
             );
         } else {
             queryExecute(
-                "DELETE FROM cfmigrations WHERE name = :name",
+                "DELETE FROM #getMigrationsTable()# WHERE name = :name",
                 { name = componentName },
                 { datasource = getDatasource() }
             );
