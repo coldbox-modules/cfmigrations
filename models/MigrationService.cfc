@@ -94,7 +94,7 @@ component singleton accessors="true" {
                 fileName = file.name,
                 componentName = componentName,
                 absolutePath = file.directory & "/" & file.name,
-                componentPath = migrationsDirectory & "/" & componentName,
+                componentPath = replace( expandPath( migrationsDirectory & "/" & componentName ), expandPath( "/" ), "" ),
                 timestamp = timestamp,
                 migrated = migrationRan,
                 canMigrateUp = !migrationRan && prequisitesInstalled,
@@ -188,7 +188,7 @@ component singleton accessors="true" {
     public boolean function isMigrationTableInstalled() {
         var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar(
             wirebox.getInstance( "#defaultGrammar#@qb" )
-        );
+            );
 
         return schema.hasTable( getMigrationsTable(), getSchema(), { datasource = getDatasource() } );
     }
@@ -196,8 +196,7 @@ component singleton accessors="true" {
     public void function runMigration( direction, migrationStruct, postProcessHook, preProcessHook ) {
         install();
 
-        var componentName = replaceNoCase( migrationStruct.componentPath, migrationsDirectory & "/", "" );
-        var migrationRan = isMigrationRan( componentName );
+        var migrationRan = isMigrationRan( migrationStruct.componentName );
 
         if ( migrationRan && direction == "up" ) {
             throw("Cannot run a migration that has already been ran.");
@@ -221,7 +220,7 @@ component singleton accessors="true" {
         transaction action="begin" {
             try {
                 invoke( migration, direction, [ schema, query ] );
-                logMigration( direction, migrationStruct.componentPath );
+                logMigration( direction, migrationStruct.componentName );
             }
             catch ( any e ) {
                 transaction action="rollback";
@@ -250,8 +249,7 @@ component singleton accessors="true" {
         return false;
     }
 
-    private void function logMigration( direction, componentPath ) {
-        var componentName = replaceNoCase( componentPath, migrationsDirectory & "/", "" );
+    private void function logMigration( direction, componentName ) {
         if ( direction == "up" ) {
             queryExecute(
                 "INSERT INTO #getMigrationsTable()# VALUES ( :name, :time )",
