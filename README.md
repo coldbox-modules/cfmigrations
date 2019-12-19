@@ -83,7 +83,9 @@ There is no limit to what you can do in a migration. It is recommended that you 
 
 ### Running Migrations
 
-There are a few methods for running migrations. (Each of these methods has a related command in `commandbox-migrations`.)
+There are a few methods for working with migrations. (Each of these methods has a related command in `commandbox-migrations`.)
+
+These methods can be run by injecting `MigrationService@cfmigrations` - for example: `getInstance( "MigrationService@cfmigrations" ).runAllMigrations( "up" )` will run all migrations.
 
 #### `runNextMigration`
 
@@ -108,6 +110,32 @@ Run all available migrations in the desired direction.
 #### `reset`
 
 Returns the database to an empty state by dropping all objects.
+
+#### `findAll`
+
+Returns an array of **all** migrations:
+
+```js
+[{
+	fileName = "2019_12_18_195831_create-users-table.cfc",
+	componentName = "2019_12_18_195831_create-users-table",
+	absolutePath = "/var/www/html/app/resources/migrations/2019_12_18_195831_create-users-table.cfc",
+	componentPath = "/app/resources/migrations/2019_12_18_195831_create-users-table.cfc",
+	timestamp = 123455555,
+	migrated = false,
+	canMigrateUp = true,
+	canMigrateDown = false,
+	migratedDate = "2019-03-22"
+}]
+```
+
+#### `hasMigrationsToRun`
+
+Returns `true` if there are available migrations which can be run in the provided order.
+
+| Name      | Type     | Required | Default         | Description                                                               |
+| --------- | -------- | -------- | --------------- | ------------------------------------------------------------------------- |
+| direction | String   | `true`   |                 | The direction for which to run the available migrations — `up` or `down`. |
 
 ### Tips and tricks
 
