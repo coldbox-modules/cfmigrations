@@ -118,9 +118,9 @@ Returns an array of **all** migrations:
 ```js
 [{
 	fileName = "2019_12_18_195831_create-users-table.cfc",
-	componentName = "2019_12_18_195831_create-uris-table",
-	absolutePath = "/var/www/html/app/resources/migrations/2019_12_18_195831_create-uris-table.cfc",
-	componentPath = "/app/resources/migrations/2019_12_18_195831_create-uris-table.cfc",
+	componentName = "2019_12_18_195831_create-users-table",
+	absolutePath = "/var/www/html/app/resources/migrations/2019_12_18_195831_create-users-table.cfc",
+	componentPath = "/app/resources/migrations/2019_12_18_195831_create-users-table.cfc",
 	timestamp = 123455555,
 	migrated = false,
 	canMigrateUp = true,
