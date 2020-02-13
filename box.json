@@ -32,7 +32,7 @@
         }
     ],
     "dependencies":{
-        "qb":"^6"
+        "qb":"^7.0.0"
     },
     "installPaths":{
         "qb":"modules/qb"
