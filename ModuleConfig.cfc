@@ -10,7 +10,7 @@ component {
 
     function configure() {
         settings = {
-            migrationsDir = "/resources/database/migrations",
+            migrationsDirectory = "/resources/database/migrations",
             defaultGrammar = "BaseGrammar"
         };
 
