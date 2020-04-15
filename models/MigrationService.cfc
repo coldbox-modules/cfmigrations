@@ -1,9 +1,9 @@
 component singleton accessors="true" {
 
     property name="wirebox" inject="wirebox";
-    property name="migrationsDirectory";
+    property name="migrationsDirectory" default="/resources/database/migrations";
     property name="datasource";
-    property name="defaultGrammar" default="AutoDiscover";
+    property name="defaultGrammar" default="AutoDiscover@qb";
     property name="schema" default="";
     property name="migrationsTable" default="cfmigrations";
 
