@@ -1,0 +1,44 @@
+language: java
+sudo: required
+services:
+  - postgresql
+jdk:
+  - openjdk8
+cache:
+  directories:
+  - "$HOME/.CommandBox/artifacts/"
+  - "$HOME/.CommandBox/server/"
+env:
+  global:
+    - DB_HOST=localhost
+    - DB_PORT=5432
+    - DB_NAME=cfmigrations_testing
+    - DB_USER=postgres
+    - DB_PASSWORD=
+  matrix:
+    - ENGINE=adobe@2018 COLDBOX_VERSION=stable
+    - ENGINE=adobe@2016 COLDBOX_VERSION=stable
+    - ENGINE=lucee@5 COLDBOX_VERSION=stable
+    - ENGINE=adobe@2018 COLDBOX_VERSION=be
+    - ENGINE=adobe@2016 COLDBOX_VERSION=be
+    - ENGINE=lucee@5 COLDBOX_VERSION=be
+before_install:
+  - curl -fsSl https://downloads.ortussolutions.com/debs/gpg | sudo apt-key add -
+  - sudo echo "deb http://downloads.ortussolutions.com/debs/noarch /" | sudo tee -a /etc/apt/sources.list.d/commandbox.list
+install:
+  - sudo apt-get update && sudo apt-get --assume-yes install commandbox
+  - box install commandbox-cfconfig,commandbox-cfformat
+  - box install
+  - box install coldbox@${COLDBOX_VERSION} --force
+before_script:
+  - psql -c 'create database cfmigrations_testing;' -U postgres
+  - box server start cfengine=$ENGINE port=8500 debug=true
+script:
+  - box testbox run runner='http://127.0.0.1:8500/tests/runner.cfm' verbose=false
+  - box run-script format:check
+after_success:
+  - box install commandbox-semantic-release
+  - box config set endpoints.forgebox.APIToken=${FORGEBOX_TOKEN}
+  - box semantic-release
+notifications:
+  email: false
