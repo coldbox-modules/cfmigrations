@@ -19,13 +19,13 @@
             "allowUpdate":true,
             "class":"org.postgresql.Driver",
             "custom":"",
-            "database":"cfmigrations_testing",
+            "database":"${DB_NAME}",
             "dbdriver":"PostgreSql",
             "dsn":"jdbc:postgresql://{host}:{port}/{database}",
-            "host":"localhost",
-            "password":"cfmigrations_testing",
-            "port":"5432",
-            "username":"cfmigrations_testing"
+            "host":"${DB_HOST}",
+            "password":"${DB_PASSWORD}",
+            "port":"${DB_PORT}",
+            "username":"${DB_USER}"
         }
     },
     "debuggingEnabled":"no",
