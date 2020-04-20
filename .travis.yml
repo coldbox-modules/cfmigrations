@@ -1,5 +1,6 @@
+os: linux
+dist: xenial
 language: java
-sudo: required
 services:
   - postgresql
 jdk:
@@ -15,7 +16,7 @@ env:
     - DB_NAME=cfmigrations_testing
     - DB_USER=postgres
     - DB_PASSWORD=
-  matrix:
+  jobs:
     - ENGINE=adobe@2018 COLDBOX_VERSION=stable
     - ENGINE=adobe@2016 COLDBOX_VERSION=stable
     - ENGINE=lucee@5 COLDBOX_VERSION=stable
@@ -33,6 +34,9 @@ install:
 before_script:
   - psql -c 'create database cfmigrations_testing;' -U postgres
   - box server start cfengine=$ENGINE port=8500 debug=true
+  - box install lex:https://ext.lucee.org/org.postgresql.jdbc42-42.1.4.lex
+  - box server restart
+  - sleep 30 # Give the postgres extension time to install
 script:
   - box testbox run runner='http://127.0.0.1:8500/tests/runner.cfm' verbose=false
   - box run-script format:check
