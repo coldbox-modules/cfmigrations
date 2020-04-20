@@ -1,6 +1,6 @@
 {
     "name":"CFMigrations",
-    "version":"2.0.3",
+    "version":"2.0.4",
     "location":"forgeboxStorage",
     "author":"Eric Peterson",
     "homepage":"https://github.com/coldbox-modules/cfmigrations",
@@ -21,8 +21,8 @@
         "schema"
     ],
     "scripts":{
-        "format": "cfformat run models/**/*.cfc,tests/specs/**/*.cfc --overwrite",
-        "format:check": "cfformat check models/**/*.cfc,tests/specs/**/*.cfc --verbose"
+        "format":"cfformat run models/**/*.cfc,tests/specs/**/*.cfc --overwrite",
+        "format:check":"cfformat check models/**/*.cfc,tests/specs/**/*.cfc --verbose"
     },
     "private":false,
     "license":[
@@ -32,12 +32,15 @@
         }
     ],
     "dependencies":{
-        "qb":"^7.0.0"
+        "qb":"^7.0.0",
+        "coldbox":"stable",
+        "orgluceepostgresql830jdbc4lex":"lex:https://ext.lucee.org/org.lucee.postgresql-8.3.0.jdbc4.lex"
     },
     "installPaths":{
         "qb":"modules/qb/",
         "testbox":"testbox/",
-        "coldbox":"tests/resources/app/coldbox/"
+        "coldbox":"tests/resources/app/coldbox/",
+        "orgluceepostgresql830jdbc4lex":"orgluceepostgresql830jdbc4lex/"
     },
     "devDependencies":{
         "testbox":"^3.2.0+356",
