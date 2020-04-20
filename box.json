@@ -21,8 +21,8 @@
         "schema"
     ],
     "scripts":{
-        "onRelease":"publish",
-        "postPublish":"!git push && git push --tags"
+        "format": "cfformat run models/**/*.cfc,tests/specs/**/*.cfc --overwrite",
+        "format:check": "cfformat check models/**/*.cfc,tests/specs/**/*.cfc --verbose"
     },
     "private":false,
     "license":[
@@ -35,6 +35,12 @@
         "qb":"^7.0.0"
     },
     "installPaths":{
-        "qb":"modules/qb"
+        "qb":"modules/qb/",
+        "testbox":"testbox/",
+        "coldbox":"tests/resources/app/coldbox/"
+    },
+    "devDependencies":{
+        "testbox":"^3.2.0+356",
+        "coldbox":"^5.6.2+1148"
     }
 }

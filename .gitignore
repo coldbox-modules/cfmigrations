@@ -1,4 +1,15 @@
 /modules/
 /testbox/
+/tests/results/
+/tests/resources/app/coldbox/
 
-jmimemagic.log
+!.engine/
+.engine/*
+!.engine/WEB-INF/
+.engine/WEB-INF/*
+!.engine/WEB-INF/lib
+.engine/WEB-INF/lib/*
+!.engine/WEB-INF/lib/h2-1.4.196.jar
+
+.env
+.tmp
