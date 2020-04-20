@@ -157,10 +157,11 @@ component singleton accessors="true" {
 				fileName      : file.name,
 				componentName : componentName,
 				absolutePath  : file.directory & "/" & file.name,
-				componentPath : replace(
-					expandPath( migrationsDirectory & "/" & componentName ),
-					expandPath( "/" ),
-					""
+				componentPath : listChangeDelims(
+					migrationsDirectory & "/" & componentName,
+					".",
+					"/",
+					false
 				),
 				timestamp      : timestamp,
 				migrated       : migrationRan,
