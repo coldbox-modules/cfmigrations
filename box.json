@@ -42,5 +42,14 @@
     "devDependencies":{
         "testbox":"^3.2.0+356",
         "coldbox":"^5.6.2+1148"
-    }
+    },
+    "ignore":[
+        "**/.*",
+        "test",
+        "tests",
+        ".engine",
+        ".travis.yml",
+        ".gitignore",
+        "server.json"
+    ]
 }
