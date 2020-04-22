@@ -1,3 +1,12 @@
+# v2.0.5
+## 22 Apr 2020 — 19:24:13 UTC
+
+### fix
+
++ __box.json:__ Move postgres lex to a devDependency
+ ([461f5c2](https://github.com/coldbox-modules/cfmigrations/commit/461f5c27887213ed2b14241afd4e6929b7ab3938))
+
+
 # v2.0.4
 ## 20 Apr 2020 — 23:38:57 UTC
 

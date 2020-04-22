@@ -1,6 +1,6 @@
 {
     "name":"CFMigrations",
-    "version":"2.0.4",
+    "version":"2.0.5",
     "location":"forgeboxStorage",
     "author":"Eric Peterson",
     "homepage":"https://github.com/coldbox-modules/cfmigrations",
@@ -33,7 +33,8 @@
     ],
     "dependencies":{
         "qb":"^7.0.0",
-        "coldbox":"stable"
+        "coldbox":"stable",
+        "orgluceepostgresql830jdbc4lex":"lex:https://ext.lucee.org/org.lucee.postgresql-8.3.0.jdbc4.lex"
     },
     "installPaths":{
         "qb":"modules/qb/",
