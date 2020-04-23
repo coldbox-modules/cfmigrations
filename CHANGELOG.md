@@ -1,3 +1,12 @@
+# v2.0.6
+## 23 Apr 2020 — 21:39:08 UTC
+
+### other
+
++ __\*:__ fix: Actually remove Postgres lex
+ ([8fcd424](https://github.com/coldbox-modules/cfmigrations/commit/8fcd4245df19eb3c996c80dc5657b70823f95a28))
+
+
 # v2.0.5
 ## 22 Apr 2020 — 19:24:13 UTC
 
