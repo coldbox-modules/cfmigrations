@@ -1,3 +1,12 @@
+# v2.0.8
+## 24 Apr 2020 — 17:17:16 UTC
+
+### other
+
++ __\*:__ fix: Don't let Travis save temporary dependencies
+ ([f180f69](https://github.com/coldbox-modules/cfmigrations/commit/f180f69e3c63e06e7ac5ca37b560dc02c44846fa))
+
+
 # v2.0.7
 ## 24 Apr 2020 — 15:52:23 UTC
 
