@@ -1,3 +1,12 @@
+# v2.0.7
+## 24 Apr 2020 — 15:52:23 UTC
+
+### other
+
++ __\*:__ fix: Remove the lex dependency again
+ ([f0c95b4](https://github.com/coldbox-modules/cfmigrations/commit/f0c95b46821093725e0be34385b3d8b4f6892bd9))
+
+
 # v2.0.6
 ## 23 Apr 2020 — 21:39:08 UTC
 
