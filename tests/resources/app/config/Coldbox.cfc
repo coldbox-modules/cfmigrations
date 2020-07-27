@@ -47,8 +47,11 @@
 
 		moduleSettings = {
 			"quick" = {
-				"defaultGrammar" = "MySQLGrammar@qb"
-            }
+				"defaultGrammar" = "PostgresGrammar@qb"
+			},
+			"qb" = {
+				"defaultGrammar" = "PostgresGrammar@qb"
+			}
 		};
 
 		// custom settings

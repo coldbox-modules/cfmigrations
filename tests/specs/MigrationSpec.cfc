@@ -9,6 +9,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
 			beforeEach( function() {
 				variables.migrationService.setMigrationsDirectory( "/resources/database/migrations" );
 				variables.migrationService.setMigrationsTable( "cfmigrations" );
+				variables.migrationService.setDefaultGrammar( "PostgresGrammar@qb" );
 			} );
 
 			it( "can install the migration table", function() {
