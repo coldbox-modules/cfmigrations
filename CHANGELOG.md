@@ -1,3 +1,17 @@
+# v2.0.9
+## 27 Jul 2020 — 20:00:48 UTC
+
+### chore
+
++ __CI:__ Temporarily disable Lucee checks ([ce29afd](https://github.com/coldbox-modules/cfmigrations/commit/ce29afd262599c70b48cb1840bd52b86c0aa007b))
++ __CI:__ Fix install order for Lucee extension install
+ ([7359f79](https://github.com/coldbox-modules/cfmigrations/commit/7359f79b2975391c3cbee2e9649703cbb9b0193b))
++ __formatting:__ Apply formatting rules
+ ([fde23e8](https://github.com/coldbox-modules/cfmigrations/commit/fde23e8f9a8799eb018aa4c2717af2f432fcc8df))
++ __box.json:__ Update to latest qb version
+ ([45fc770](https://github.com/coldbox-modules/cfmigrations/commit/45fc770b4a21dc5394dd58baf594404737a3e9b0))
+
+
 # v2.0.8
 ## 24 Apr 2020 — 17:17:16 UTC
 
