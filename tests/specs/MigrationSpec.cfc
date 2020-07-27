@@ -39,10 +39,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
 				variables.migrationService.up();
 				expect( schema.hasTable( "users" ) ).toBeTrue( "users table should exist" );
 				expect( schema.hasTable( "posts" ) ).toBeTrue( "posts table should exist" );
-				expect( qb.from( "cfmigrations" ).count() ).toBe(
-					2,
-					"Two records should be in the cfmigrations table"
-				);
+				expect( qb.from( "cfmigrations" ).count() ).toBe( 2, "Two records should be in the cfmigrations table" );
 			} );
 
 			it( "can run one migration up", function() {
@@ -66,10 +63,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
 				expect( schema.hasTable( "cfmigrations" ) ).toBeTrue( "cfmigrations table should exist" );
 				expect( schema.hasTable( "users" ) ).toBeTrue( "users table should exist" );
 				expect( schema.hasTable( "posts" ) ).toBeTrue( "posts table should exist" );
-				expect( qb.from( "cfmigrations" ).count() ).toBe(
-					2,
-					"Two records should be in the cfmigrations table"
-				);
+				expect( qb.from( "cfmigrations" ).count() ).toBe( 2, "Two records should be in the cfmigrations table" );
 			} );
 
 			it( "can run all migrations down", function() {
@@ -103,9 +97,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
 			} );
 
 			it( "can customize the migrations directory", function() {
-				variables.migrationService.setMigrationsDirectory(
-					"/resources/database/othermigrations"
-				);
+				variables.migrationService.setMigrationsDirectory( "/resources/database/othermigrations" );
 				variables.migrationService.up();
 				expect( schema.hasTable( "users" ) ).toBeFalse( "users table should not exist" );
 				expect( schema.hasTable( "posts" ) ).toBeFalse( "posts table should not exist" );

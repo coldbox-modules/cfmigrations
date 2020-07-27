@@ -221,9 +221,7 @@ component singleton accessors="true" {
 			return;
 		}
 
-		var schema = wirebox
-			.getInstance( "SchemaBuilder@qb" )
-			.setGrammar( wirebox.getInstance( defaultGrammar ) );
+		var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) );
 
 		schema.create(
 			getMigrationsTable(),
@@ -254,16 +252,12 @@ component singleton accessors="true" {
 	}
 
 	public void function reset() {
-		var schema = wirebox
-			.getInstance( "SchemaBuilder@qb" )
-			.setGrammar( wirebox.getInstance( defaultGrammar ) );
+		var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) );
 		schema.dropAllObjects( options = { datasource : getDatasource() }, schema = getSchema() );
 	}
 
 	public boolean function isMigrationTableInstalled() {
-		var schema = wirebox
-			.getInstance( "SchemaBuilder@qb" )
-			.setGrammar( wirebox.getInstance( defaultGrammar ) );
+		var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) );
 
 		return schema.hasTable(
 			getMigrationsTable(),
@@ -292,13 +286,9 @@ component singleton accessors="true" {
 
 		var migration = wirebox.getInstance( migrationStruct.componentPath );
 
-		var schema = wirebox
-			.getInstance( "SchemaBuilder@qb" )
-			.setGrammar( wirebox.getInstance( defaultGrammar ) );
+		var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) );
 
-		var query = wirebox
-			.getInstance( "QueryBuilder@qb" )
-			.setGrammar( wirebox.getInstance( defaultGrammar ) );
+		var query = wirebox.getInstance( "QueryBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) );
 
 		preProcessHook( migrationStruct );
 		transaction action="begin" {
