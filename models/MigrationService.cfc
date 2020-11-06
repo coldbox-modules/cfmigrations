@@ -291,30 +291,19 @@ component singleton accessors="true" {
 		var query = wirebox.getInstance( "QueryBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) );
 
 		preProcessHook( migrationStruct );
-
-		if ( structKeyExists( migration, "useTransactions" ) && !migration.useTransactions ) {
-			invoke(
-				migration,
-				direction,
-				[ schema, query ]
-			);
-			logMigration( direction, migrationStruct.componentName );
-		} else {
-			transaction action="begin" {
-				try {
-					invoke(
-						migration,
-						direction,
-						[ schema, query ]
-					);
-					logMigration( direction, migrationStruct.componentName );
-				} catch ( any e ) {
-					transaction action="rollback";
-					rethrow;
-				}
+		transaction action="begin" {
+			try {
+				invoke(
+					migration,
+					direction,
+					[ schema, query ]
+				);
+				logMigration( direction, migrationStruct.componentName );
+			} catch ( any e ) {
+				transaction action="rollback";
+				rethrow;
 			}
 		}
-
 		postProcessHook( migrationStruct );
 	}
 
