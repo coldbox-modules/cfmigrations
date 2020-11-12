@@ -56,6 +56,7 @@ jobs:
         run: |
           box server start cfengine=${{ matrix.cfengine }} javaVersion=${{ matrix.javaVersion }}
           sleep 30
+          box server restart
 
       - name: Run TestBox Tests
         env:
