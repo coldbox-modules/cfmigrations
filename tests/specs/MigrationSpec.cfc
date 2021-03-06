@@ -115,6 +115,14 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
 					"custom_cfmigrations_table table should exist"
 				);
 			} );
+
+			it( "can pass a seed argument which the seeder data migrations", function(){
+				variables.migrationService.install();
+				expect( schema.hasTable( "cfmigrations" ) ).toBeTrue( "cfmigrations table should exist" );
+				variables.migrationService.up( seed=true );
+				expect( schema.hasTable( "users" ) ).toBeTrue( "users table should exist" );
+				expect( qb.from( "users" ).count() ).toBe( 20, "The seeder data was not inserted" );
+			} )
 		} );
 	}
 

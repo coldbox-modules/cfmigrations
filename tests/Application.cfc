@@ -14,8 +14,7 @@ component {
     this.mappings[ "/app" ] = testsPath & "resources/app";
     this.mappings[ "/coldbox" ] = testsPath & "resources/app/coldbox";
     this.mappings[ "/testbox" ] = rootPath & "/testbox";
-    this.mappings[ "/resources/database/migrations" ] = testsPath & "resources/app/resources/database/migrations";
-    this.mappings[ "/resources/database/othermigrations" ] = testsPath & "resources/app/resources/database/othermigrations";
+    this.mappings[ "/resources/database" ] = testsPath & "resources/app/resources/database";
 
     this.datasource = "cfmigrations_testing";
 

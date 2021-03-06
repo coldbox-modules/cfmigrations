@@ -51,14 +51,21 @@ component singleton accessors="true" {
 	public MigrationService function up(
 		boolean once = false,
 		postProcessHook,
-		preProcessHook
+		preProcessHook,
+		boolean seed = false
 	) {
 		arguments.direction = "up";
+		
 		if ( arguments.once ) {
 			runNextMigration( argumentCollection = arguments );
 		} else {
 			runAllMigrations( argumentCollection = arguments );
 		}
+
+		if( arguments.seed ){
+			this.seed();
+		}
+
 		return this;
 	}
 
@@ -77,12 +84,18 @@ component singleton accessors="true" {
 	}
 
 	public MigrationService function seed(){
-		if( !directoryExists( expandPath( seedsDirectory ) ) ) return;
+
+		if( !directoryExists( expandPath( variables.seedsDirectory ) ) ) return this;
 
 		var seeds = findSeeds();
-
+		
 		seeds.each( function( file ){
-			variables.wirebox.getInstance( file.componentPath ).execute();
+			runMigration(
+				direction="up",
+				migrationStruct = file,
+				preProcessHook = function(){},
+				postProcessHook = function(){}
+			);
 		} );
 
 		return this;
@@ -178,10 +191,10 @@ component singleton accessors="true" {
 		} );
 	}
 
-	public array function findAll() {
+	public array function findAll( string directory = variables.migrationsDirectory ) {
 
 		var migrationFiles = directoryList(
-				path = expandPath( migrationsDirectory ),
+				path = expandPath( arguments.directory ),
 				recurse = false,
 				listInfo = "query",
 				filter = "*.cfc",
@@ -209,7 +222,7 @@ component singleton accessors="true" {
 				componentName : componentName,
 				absolutePath  : file.directory & "/" & file.name,
 				componentPath : listChangeDelims(
-					migrationsDirectory & "/" & componentName,
+					directory & "/" & componentName,
 					".",
 					"/",
 					false
@@ -269,45 +282,7 @@ component singleton accessors="true" {
 	}
 
 	public array function findSeeds(){
-		var seeds = directoryList(
-				path = expandPath( seedsDirectory ),
-				recurse = false,
-				listInfo = "query",
-				filter = "*.cfc",
-				sort = "name",
-				type = "file"
-			)
-			.reduce( function( result, row ){ result.append( row );return result; }, [] )
-			.filter( function( item ){
-				return isMigrationFile( item.name );
-			} )
-			.map( function( file ){
-				var timestamp     = extractTimestampFromFileName( file.name );
-				var componentName = left( file.name, len( file.name ) - 4 );
-			
-				var migration = {
-					fileName      : file.name,
-					componentName : componentName,
-					absolutePath  : file.directory & "/" & file.name,
-					componentPath : listChangeDelims(
-						migrationsDirectory & "/" & componentName,
-						".",
-						"/",
-						false
-					),
-					timestamp      : timestamp
-				};
-
-				prequisitesInstalled = migrationRan;
-
-				return migration;
-			} );
-
-		seeds.sort( function( a, b ) {
-			return dateCompare( a.timestamp, b.timestamp );
-		} );
-
-		return seeds;
+		return findAll( directory=variables.seedsDirectory );
 	}
 
 	public boolean function hasMigrationsToRun( direction ) {
