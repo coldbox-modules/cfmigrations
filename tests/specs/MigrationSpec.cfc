@@ -8,8 +8,8 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
 		describe( "cfmigrations", function() {
 			beforeEach( function() {
 				variables.migrationService.setMigrationsDirectory( "/resources/database/migrations" );
-				variables.migrationService.setMigrationsTable( "cfmigrations" );
-				variables.migrationService.setDefaultGrammar( "PostgresGrammar@qb" );
+				variables.migrationService.getManager().setMigrationsTable( "cfmigrations" );
+				variables.migrationService.getManager().setDefaultGrammar( "PostgresGrammar@qb" );
 			} );
 
 			it( "can install the migration table", function() {
@@ -108,7 +108,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
 			} );
 
 			it( "can customize the name of the cfmigrations table", function() {
-				variables.migrationService.setMigrationsTable( "custom_cfmigrations_table" );
+				variables.migrationService.getManager().setMigrationsTable( "custom_cfmigrations_table" );
 				variables.migrationService.install();
 				expect( schema.hasTable( "cfmigrations" ) ).toBeFalse( "cfmigrations table should not exist" );
 				expect( schema.hasTable( "custom_cfmigrations_table" ) ).toBeTrue(
