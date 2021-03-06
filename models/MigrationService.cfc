@@ -79,18 +79,11 @@ component singleton accessors="true" {
 	public MigrationService function seed(){
 		if( !directoryExists( expandPath( seedsDirectory ) ) ) return;
 
-		directoryList(
-				path = expandPath( seedsDirectory ),
-				recurse = false,
-				listInfo = "name",
-				filter = "*.cfc",
-				sort = "name",
-				type = "file"
-			)
-			.reduce( function( result, row ){ result.append( row );return result; }, [] )
-			.filter( function( item ){
-				return isMigrationFile( item.name );
-			} );
+		var seeds = findSeeds();
+
+		seeds.each( function( file ){
+			variables.wirebox.getInstance( file.componentPath ).execute();
+		} );
 
 		return this;
 	}
@@ -273,6 +266,48 @@ component singleton accessors="true" {
 		);
 
 		return migrations;
+	}
+
+	public array function findSeeds(){
+		var seeds = directoryList(
+				path = expandPath( seedsDirectory ),
+				recurse = false,
+				listInfo = "query",
+				filter = "*.cfc",
+				sort = "name",
+				type = "file"
+			)
+			.reduce( function( result, row ){ result.append( row );return result; }, [] )
+			.filter( function( item ){
+				return isMigrationFile( item.name );
+			} )
+			.map( function( file ){
+				var timestamp     = extractTimestampFromFileName( file.name );
+				var componentName = left( file.name, len( file.name ) - 4 );
+			
+				var migration = {
+					fileName      : file.name,
+					componentName : componentName,
+					absolutePath  : file.directory & "/" & file.name,
+					componentPath : listChangeDelims(
+						migrationsDirectory & "/" & componentName,
+						".",
+						"/",
+						false
+					),
+					timestamp      : timestamp
+				};
+
+				prequisitesInstalled = migrationRan;
+
+				return migration;
+			} );
+
+		seeds.sort( function( a, b ) {
+			return dateCompare( a.timestamp, b.timestamp );
+		} );
+
+		return seeds;
 	}
 
 	public boolean function hasMigrationsToRun( direction ) {
