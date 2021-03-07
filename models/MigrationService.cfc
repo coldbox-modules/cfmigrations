@@ -203,12 +203,12 @@ component singleton accessors="true" {
 
 	public array function findAll( string directory = variables.migrationsDirectory ) {
 		var migrationFiles = directoryList(
-			path     = expandPath( arguments.directory ),
-			recurse  = false,
-			listInfo = "query",
-			filter   = "*.cfc",
-			sort     = "name",
-			type     = "file"
+			expandPath( arguments.directory ),
+			false,
+			"query",
+			"*.cfc",
+			"name",
+			"file"
 		).reduce( function( result, row ) {
 				result.append( row );
 				return result;

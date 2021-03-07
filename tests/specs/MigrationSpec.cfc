@@ -122,7 +122,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
 				variables.migrationService.up( seed = true );
 				expect( schema.hasTable( "users" ) ).toBeTrue( "users table should exist" );
 				expect( qb.from( "users" ).count() ).toBe( 20, "The seeder data was not inserted" );
-			} )
+			} );
 		} );
 	}
 

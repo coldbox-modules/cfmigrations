@@ -64,7 +64,8 @@ component accessors="true" {
 
 
 	boolean function isMigrationRan( componentName ) {
-		return findProcessed().contains( componentName );
+		var processed = findProcessed();
+		return processed.contains( componentName );
 	}
 
 
