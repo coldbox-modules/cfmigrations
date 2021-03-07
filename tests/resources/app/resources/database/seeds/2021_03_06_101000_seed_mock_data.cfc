@@ -1,17 +1,17 @@
-component{
-    function up( schema, query ){
-        var mockData = new testbox.system.modules.mockdatacfc.models.MockData();
+component {
 
-        var testUsers = mockData.mock(
-            argumentCollection={
-                "$num" : 20,
-                "email" : "email",
-                "password" : "word"
-            }
-        );
+	function up( schema, query ) {
+		var mockData = new testbox.system.modules.mockdatacfc.models.MockData();
 
-        query.table( "users" )
-                .insert( testUsers );
+		var testUsers = mockData.mock(
+			argumentCollection = {
+				"$num"     : 20,
+				"email"    : "email",
+				"password" : "word"
+			}
+		);
 
-    }
+		query.table( "users" ).insert( testUsers );
+	}
+
 }

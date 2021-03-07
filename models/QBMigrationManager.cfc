@@ -1,16 +1,17 @@
 component accessors="true" {
+
 	property name="wirebox" inject="wirebox";
-    property name="defaultGrammar" default="AutoDiscover@qb";
+	property name="defaultGrammar" default="AutoDiscover@qb";
 	property name="datasource";
 	property name="migrationsTable" default="cfmigrations";
 	property name="schema";
 	property name="useTransactions" default="true";
 
-	boolean function isReady(){
+	boolean function isReady() {
 		return isMigrationTableInstalled();
 	}
 
-	function install( runAll = false ){
+	function install( runAll = false ) {
 		if ( isMigrationTableInstalled() ) {
 			return;
 		}
@@ -44,7 +45,7 @@ component accessors="true" {
 		schema.dropAllObjects( options = { datasource : getDatasource() }, schema = getSchema() );
 	}
 
-	array function findProcessed(){
+	array function findProcessed() {
 		return queryExecute(
 			"
                 SELECT name
@@ -52,14 +53,19 @@ component accessors="true" {
             ",
 			{},
 			{ datasource : getDatasource() }
-		).reduce( function( result, row ){ result.append( row );return result; }, [] )
-		.map( function( row ){ return row.name; } );
+		).reduce( function( result, row ) {
+				result.append( row );
+				return result;
+			}, [] )
+			.map( function( row ) {
+				return row.name;
+			} );
 	}
 
 
-    boolean function isMigrationRan( componentName ){
+	boolean function isMigrationRan( componentName ) {
 		return findProcessed().contains( componentName );
-    }
+	}
 
 
 	private void function logMigration( direction, componentName ) {
@@ -111,7 +117,7 @@ component accessors="true" {
 
 		preProcessHook( migrationStruct );
 
-		$transactioned( function(){
+		$transactioned( function() {
 			invoke(
 				migration,
 				direction,
@@ -119,9 +125,8 @@ component accessors="true" {
 			);
 			logMigration( direction, migrationStruct.componentName );
 		} );
-		
-		postProcessHook( migrationStruct );
 
+		postProcessHook( migrationStruct );
 	}
 
 	public boolean function isMigrationTableInstalled() {
@@ -134,8 +139,8 @@ component accessors="true" {
 		);
 	}
 
-	private function $transactioned( required target ){
-		if( variables.useTransactions ){
+	private function $transactioned( required target ) {
+		if ( variables.useTransactions ) {
 			transaction action="begin" {
 				try {
 					arguments.target();

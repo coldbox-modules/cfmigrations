@@ -2,32 +2,41 @@ component singleton accessors="true" {
 
 	property name="wirebox" inject="wirebox";
 	property name="migrationsDirectory" default="/resources/database/migrations";
-	property name="seedsDirectory" default="/resources/database/seeds";
-	property name="manager"   default="cfmigrations.models.QBMigrationManager";
-	
+	property name="seedsDirectory"      default="/resources/database/seeds";
+	property name="manager"             default="cfmigrations.models.QBMigrationManager";
 
-	MigrationService function init(){
+
+	MigrationService function init() {
 		structAppend( variables, arguments, true );
 		return this;
 	}
 
-	function onDIComplete(){
+	function onDIComplete() {
 		variables.manager = variables.wirebox.getInstance( variables.manager );
 
-		var omit = [ "wirebox", "migrationsDirectory", "seedsDirectory", "manager" ];
+		var omit = [
+			"wirebox",
+			"migrationsDirectory",
+			"seedsDirectory",
+			"manager"
+		];
 
-		variables.keyArray()
-					.filter( function( key ){
-						return isSimpleValue( variables[ key ] ) && !omit.contains( key );
-					} )
-					.each( function( key ){
-						invoke( variables.manager, "set" & key, variables[ key ] );
-					} );
-		
+		variables
+			.keyArray()
+			.filter( function( key ) {
+				return isSimpleValue( variables[ key ] ) && !omit.contains( key );
+			} )
+			.each( function( key ) {
+				invoke(
+					variables.manager,
+					"set" & key,
+					variables[ key ]
+				);
+			} );
 	}
 
 	public void function install( runAll = false ) {
-		variables.manager.install( argumentCollection=arguments );
+		variables.manager.install( argumentCollection = arguments );
 
 		if ( runAll ) {
 			runAllMigrations( "up" );
@@ -55,14 +64,14 @@ component singleton accessors="true" {
 		boolean seed = false
 	) {
 		arguments.direction = "up";
-		
+
 		if ( arguments.once ) {
 			runNextMigration( argumentCollection = arguments );
 		} else {
 			runAllMigrations( argumentCollection = arguments );
 		}
 
-		if( arguments.seed ){
+		if ( arguments.seed ) {
 			this.seed();
 		}
 
@@ -83,18 +92,19 @@ component singleton accessors="true" {
 		return this;
 	}
 
-	public MigrationService function seed(){
-
-		if( !directoryExists( expandPath( variables.seedsDirectory ) ) ) return this;
+	public MigrationService function seed() {
+		if ( !directoryExists( expandPath( variables.seedsDirectory ) ) ) return this;
 
 		var seeds = findSeeds();
-		
-		seeds.each( function( file ){
+
+		seeds.each( function( file ) {
 			runMigration(
-				direction="up",
+				direction       = "up",
 				migrationStruct = file,
-				preProcessHook = function(){},
-				postProcessHook = function(){}
+				preProcessHook  = function() {
+				},
+				postProcessHook = function() {
+				}
 			);
 		} );
 
@@ -192,17 +202,18 @@ component singleton accessors="true" {
 	}
 
 	public array function findAll( string directory = variables.migrationsDirectory ) {
-
 		var migrationFiles = directoryList(
-				path = expandPath( arguments.directory ),
-				recurse = false,
-				listInfo = "query",
-				filter = "*.cfc",
-				sort = "name",
-				type = "file"
-			)
-			.reduce( function( result, row ){ result.append( row );return result; }, [] )
-			.filter( function( item ){
+			path     = expandPath( arguments.directory ),
+			recurse  = false,
+			listInfo = "query",
+			filter   = "*.cfc",
+			sort     = "name",
+			type     = "file"
+		).reduce( function( result, row ) {
+				result.append( row );
+				return result;
+			}, [] )
+			.filter( function( item ) {
 				return isMigrationFile( item.name );
 			} );
 
@@ -210,9 +221,9 @@ component singleton accessors="true" {
 		var processed = variables.manager.findProcessed();
 
 		var prequisitesInstalled = true;
-		var managerIsReady = variables.manager.isReady();
+		var managerIsReady       = variables.manager.isReady();
 
-		var migrations = migrationFiles.map( function( file ){
+		var migrations = migrationFiles.map( function( file ) {
 			var timestamp     = extractTimestampFromFileName( file.name );
 			var componentName = left( file.name, len( file.name ) - 4 );
 			var migrationRan  = managerIsReady ? processed.contains( componentName ) : false;
@@ -239,7 +250,7 @@ component singleton accessors="true" {
 			return migration;
 		} );
 
-		
+
 
 		if ( !managerIsReady ) {
 			arrayEach( migrations, function( migration ) {
@@ -256,41 +267,35 @@ component singleton accessors="true" {
 		}
 
 		// sort in reversed order to get which migrations can be brought down
-		migrations.sort(
-			function( a, b ) {
-				return dateCompare( b.timestamp, a.timestamp );
-			}
-		);
+		migrations.sort( function( a, b ) {
+			return dateCompare( b.timestamp, a.timestamp );
+		} );
 
 		var laterMigrationsNotInstalled = true;
 
-		migrations.each( 
-			function( migration ) {
-				migration.canMigrateDown    = migration.migrated && laterMigrationsNotInstalled;
-				laterMigrationsNotInstalled = !migration.migrated;
-			}
-		);
+		migrations.each( function( migration ) {
+			migration.canMigrateDown    = migration.migrated && laterMigrationsNotInstalled;
+			laterMigrationsNotInstalled = !migration.migrated;
+		} );
 
 		// resort to timestamp asc
-		migrations.sort(
-			function( a, b ) {
-				return dateCompare( a.timestamp, b.timestamp );
-			}
-		);
+		migrations.sort( function( a, b ) {
+			return dateCompare( a.timestamp, b.timestamp );
+		} );
 
 		return migrations;
 	}
 
-	public array function findSeeds(){
-		return findAll( directory=variables.seedsDirectory );
+	public array function findSeeds() {
+		return findAll( directory = variables.seedsDirectory );
 	}
 
 	public boolean function hasMigrationsToRun( direction ) {
-		return !! findAll().filter( 
-			function( migration ) {
+		return !!findAll()
+			.filter( function( migration ) {
 				return direction == "up" ? !migration.migrated : migration.migrated;
-			}
-		).len();
+			} )
+			.len();
 	}
 
 	public void function runMigration(
@@ -313,14 +318,13 @@ component singleton accessors="true" {
 
 		preProcessHook( migrationStruct );
 
-		variables.manager.runMigration( argumentCollection=arguments );
+		variables.manager.runMigration( argumentCollection = arguments );
 
 		postProcessHook( migrationStruct );
-		
 	}
 
 	private boolean function isMigrationRan( componentName ) {
-		return variables.manager.isMigrationRan( argumentCollection=arguments );
+		return variables.manager.isMigrationRan( argumentCollection = arguments );
 	}
 
 	private void function logMigration( direction, componentName ) {
