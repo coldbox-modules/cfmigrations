@@ -10,14 +10,22 @@ component {
 
 	function configure() {
 		settings = {
-			migrationsDirectory : "/resources/database/migrations",
 			defaultGrammar      : "BaseGrammar"
 		};
+
+	}
+
+	function onLoad(){
+
+		if( settings.keyExists( "defaultGrammar" ) && listLen( settings.defaultGrammar, "." ) < 2 ){
+			settings.defaultGrammar &= "@qb";
+		}
 
 		binder
 			.map( "MigrationService@cfmigrations" )
 			.to( "#moduleMapping#.models.MigrationService" )
-			.initArg( name = "defaultGrammar", ref = "#settings.defaultGrammar#@qb" );
+			.initWith( argumentCollection=settings );
+
 	}
 
 }
