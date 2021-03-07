@@ -21,10 +21,12 @@ component singleton accessors="true" {
 			"manager"
 		];
 
+		var managerProperties = getMetadata( variables.manager ).properties.map( function( prop ){ return prop.name; } );
+
 		variables
 			.keyArray()
 			.filter( function( key ) {
-				return isSimpleValue( variables[ key ] ) && !omit.contains( key );
+				return managerProperties.contains( key ) && isSimpleValue( variables[ key ] ) && !omit.contains( key );
 			} )
 			.each( function( key ) {
 				invoke(
