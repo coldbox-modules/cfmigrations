@@ -16,15 +16,24 @@ component {
 	}
 
 	function onLoad(){
+		if( !settings.keyExists( "managers" ) ){
 
-		if( settings.keyExists( "defaultGrammar" ) && listLen( settings.defaultGrammar, "." ) < 2 ){
-			settings.defaultGrammar &= "@qb";
+			if( settings.keyExists( "defaultGrammar" ) && listLen( settings.defaultGrammar, "." ) < 2 ){
+				settings.defaultGrammar &= "@qb";
+			}
+
+			binder
+				.map( "MigrationService@cfmigrations" )
+				.to( "#moduleMapping#.models.MigrationService" )
+				.initWith( argumentCollection=settings );
+		} else {
+			settings.managers.keyArray().each( function( key ){
+				binder
+					.map( "MigrationService:" & key )
+					.to( "#moduleMapping#.models.MigrationService" )
+					.initWith( argumentCollection=settings.managers[ key ] );
+			} );
 		}
-
-		binder
-			.map( "MigrationService@cfmigrations" )
-			.to( "#moduleMapping#.models.MigrationService" )
-			.initWith( argumentCollection=settings );
 
 	}
 

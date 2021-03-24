@@ -45,6 +45,70 @@ In order to track which migrations have been ran, `cfmigrations` needs to instal
 
 If you find a need to, you can uninstall the migrations table by calling the `uninstall()` method or by running `migrate uninstall` from `commandbox-migrations`. Running this method will rollback all ran migrations before dropping the `cfmigrations` table.
 
+### Configuration
+
+The module may be configured with a single Migration Service or multiple migration services with different managers.  The default manager for the Application is `QBMigrationManager`, but you may use others, such as those included with the `cbmongodb` and `cbelasticsearch` modules or roll your own.
+
+The default configuration for the module settings are:
+
+```
+moduleSettings = {
+    "cfmigrations" : {
+        // The manager handling and executing the migration files
+        "manager" : "cfmigrations.models.QBMigrationManager",
+        // For the QB Migration manager, the default SQL grammar to use
+        "defaultGrammar" : "BaseGrammar@qb",
+        // The directory containing the migration files
+        "migrationsDirectory" : "/resources/database/migrations",
+        // The directory containing any seeds, if applicable
+        "seedsDirectory" : "/resources/database/seeds",
+        // A comma-delimited list of environments which are allowed to run seeds
+        "seedEnvironments" : "development"
+
+    }
+}
+```
+
+With this configuration, the migration manager may be retrieved via wirebox at `MigrationService@cfmigrations`
+
+
+If you wish to use multiple managers, the DSL created by wirebox is a bit different.  Here is an example of a multi-manager migrations system.  Each separate manager will require their own configuration properties.
+
+```
+moduleSettings = {
+    "cfmigrations": {
+        "managers": {
+            "db1": {
+                "manager": "cfmigrations.models.QBMigrationManager",
+                "migrationsDirectory" : "/resources/database/db1/migrations",
+                "defaultGrammar" : "MySQLGrammar@qb",
+                "datasource" : "db1",
+                "useTransactions" : "false"
+            },
+            "db2": {
+                "manager": "cfmigrations.models.QBMigrationManager",
+                "migrationsDirectory" : "/resources/database/db2/migrations",
+                "defaultGrammar" : "PostgresGrammar@qb",
+                "datasource" : "db2",
+                "useTransactions" : "true"
+            },
+            "elasticsearch": {
+                "manager": "cbelasticearch.models.migrations.Manager",
+                "migrationsDirectory" : "/resources/elasticsearch/migrations"
+            }
+        }
+    }
+};
+```
+
+With this configuration the individual migration managers would be retreived as such:
+
+- `db1` - getInstance( "MigrationService:db1" )
+- `db2` - getInstance( "MigrationService:db2" )
+- `elasticsearch` - getInstance( "MigrationService:elasticsearch" )
+
+
+
 ### Setting Schema
 
 It's important to set the `schema` attribute for `cfmigrations`.  Without it, `cfmigrations` can't tell the difference
