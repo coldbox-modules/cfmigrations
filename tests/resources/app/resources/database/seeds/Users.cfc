@@ -1,6 +1,6 @@
 component {
 
-	function up( schema, query ) {
+	function run( schema, query ) {
 		var mockData = new testbox.system.modules.mockdatacfc.models.MockData();
 
 		var testUsers = mockData.mock(

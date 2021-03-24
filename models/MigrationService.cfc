@@ -96,23 +96,11 @@ component singleton accessors="true" {
 		return this;
 	}
 
-	public MigrationService function seed() {
+	public MigrationService function seed( string seedName ) {
 		if ( !directoryExists( expandPath( variables.seedsDirectory ) ) ) return this;
 
-		var processed = manager.findProcessed();
-		var seeds     = findSeeds().filter( function( seed ) {
-			return !processed.contains( seed.componentName );
-		} );
-
-		seeds.each( function( file ) {
-			runMigration(
-				direction       = "up",
-				migrationStruct = file,
-				preProcessHook  = function() {
-				},
-				postProcessHook = function() {
-				}
-			);
+		findSeeds( argumentCollection=arguments ).each( function( file ) {
+			variables.manager.runSeed( file.componentPath );
 		} );
 
 		return this;
@@ -293,8 +281,37 @@ component singleton accessors="true" {
 		return migrations;
 	}
 
-	public array function findSeeds() {
-		return findAll( directory = variables.seedsDirectory );
+	public array function findSeeds( string seedName ) {
+
+		return directoryList(
+			expandPath( variables.seedsDirectory ),
+			false,
+			"query",
+			arguments.keyExists( "seedName" ) ? arguments.seedName & ".cfc" : "*.cfc",
+			"name",
+			"file"
+		).reduce( function( result, row ) {
+			result.append( row );
+			return result;
+		}, [] )
+		.map( function( file ){
+			var componentName = left( file.name, len( file.name ) - 4 );
+			structAppend(
+				file,
+				{
+					"componentName" : componentName,
+					"componentPath" : listChangeDelims(
+										variables.seedsDirectory & "/" & componentName,
+										".",
+										"/",
+										false
+									)
+				}
+			);
+			return file;
+		} )
+
+
 	}
 
 	public boolean function hasMigrationsToRun( direction ) {
