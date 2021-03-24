@@ -1,9 +1,11 @@
 component singleton accessors="true" {
 
-	property name="wirebox" inject="wirebox";
+	property name="wirebox" 			inject="wirebox";
+	property name="environment" 		inject="coldbox:setting:environment" default="development";
+	property name="manager"             default="cfmigrations.models.QBMigrationManager";
 	property name="migrationsDirectory" default="/resources/database/migrations";
 	property name="seedsDirectory"      default="/resources/database/seeds";
-	property name="manager"             default="cfmigrations.models.QBMigrationManager";
+	property name="seedEnvironments"    default="development";
 
 
 	MigrationService function init() {
@@ -37,6 +39,8 @@ component singleton accessors="true" {
 					variables[ key ]
 				);
 			} );
+
+		if( isSimpleValue( variables.seedEnvironments) ) variables.seedEnvironments = listToArray( variables.seedEnvironments );
 	}
 
 	public void function install( runAll = false ) {
@@ -97,6 +101,12 @@ component singleton accessors="true" {
 	}
 
 	public MigrationService function seed( string seedName ) {
+		if( !isNull( variables.environment ) && !variables.seedEnvironments.containsNoCase( variables.environment ) ){
+			throw(
+				"You have attempted to run seeds in an unauthorized environment ( #variables.environment# ). Authorized environments are #variables.seedEnvironments.toList()#"
+			);
+		}
+
 		if ( !directoryExists( expandPath( variables.seedsDirectory ) ) ) return this;
 
 		findSeeds( argumentCollection=arguments ).each( function( file ) {

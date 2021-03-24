@@ -10,6 +10,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
 				variables.migrationService.setMigrationsDirectory( "/resources/database/migrations" );
 				variables.migrationService.getManager().setMigrationsTable( "cfmigrations" );
 				variables.migrationService.getManager().setDefaultGrammar( "PostgresGrammar@qb" );
+				variables.migrationService.setSeedEnvironments( [ "development" ] );
 			} );
 
 			it( "can install the migration table", function() {
@@ -122,6 +123,11 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
 				variables.migrationService.up( seed = true );
 				expect( schema.hasTable( "users" ) ).toBeTrue( "users table should exist" );
 				expect( qb.from( "users" ).count() ).toBe( 20, "The seeder data was not inserted" );
+			} );
+
+			it( "Will throw an error if attempting to run seeds in an unauthorized environment", function(){
+				variables.migrationService.setSeedEnvironments( [ "foo" ] );
+				expect( function(){ variables.migrationService.seed(); } ).toThrow();
 			} );
 		} );
 	}
