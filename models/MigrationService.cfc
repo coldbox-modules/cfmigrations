@@ -210,12 +210,12 @@ component singleton accessors="true" {
 			"name",
 			"file"
 		).reduce( function( result, row ) {
-				result.append( row );
-				return result;
-			}, [] )
-			.filter( function( item ) {
-				return isMigrationFile( item.name );
-			} );
+			result.append( row );
+			return result;
+		}, [] )
+		.filter( function( item ) {
+			return isMigrationFile( item.name );
+		} );
 
 
 		var processed = variables.manager.findProcessed();

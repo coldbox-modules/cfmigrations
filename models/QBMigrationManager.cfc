@@ -46,20 +46,13 @@ component accessors="true" {
 	}
 
 	array function findProcessed() {
-		return queryExecute(
-			"
-                SELECT name
-                FROM #getMigrationsTable()#
-            ",
-			{},
-			{ datasource : getDatasource() }
-		).reduce( function( result, row ) {
-				result.append( row );
-				return result;
-			}, [] )
-			.map( function( row ) {
-				return row.name;
-			} );
+		return wirebox.getInstance( "QueryBuilder@qb" )
+				.from( getMigrationsTable() )
+				.setReturnFormat( "array" )
+				.get( [ "name" ], { "datasource" : getDatasource()  } )
+				.map( function( row ) {
+					return row.name;
+				} );
 	}
 
 
