@@ -21,10 +21,14 @@ component singleton accessors="true" {
 			"manager"
 		];
 
+		var managerProperties = getMetadata( variables.manager ).properties.map( function( prop ) {
+			return prop.name;
+		} );
+
 		variables
 			.keyArray()
 			.filter( function( key ) {
-				return isSimpleValue( variables[ key ] ) && !omit.contains( key );
+				return managerProperties.contains( key ) && isSimpleValue( variables[ key ] ) && !omit.contains( key );
 			} )
 			.each( function( key ) {
 				invoke(
@@ -95,7 +99,10 @@ component singleton accessors="true" {
 	public MigrationService function seed() {
 		if ( !directoryExists( expandPath( variables.seedsDirectory ) ) ) return this;
 
-		var seeds = findSeeds();
+		var processed = manager.findProcessed();
+		var seeds     = findSeeds().filter( function( seed ) {
+			return !processed.contains( seed.componentName );
+		} );
 
 		seeds.each( function( file ) {
 			runMigration(
