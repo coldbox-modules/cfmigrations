@@ -316,11 +316,8 @@ component singleton accessors="true" {
 			throw( "Cannot rollback a migration if it hasn't been ran yet." );
 		}
 
-		preProcessHook( migrationStruct );
-
 		variables.manager.runMigration( argumentCollection = arguments );
 
-		postProcessHook( migrationStruct );
 	}
 
 	private boolean function isMigrationRan( componentName ) {
