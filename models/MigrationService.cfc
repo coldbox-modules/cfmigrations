@@ -9,10 +9,27 @@ component singleton accessors="true" {
 	property name="managerProperties";
 
 
-	MigrationService function init() {
+	/**
+	 * Initializes the Migration Service instance
+	 *
+	 * @manager 
+	 * @migrationsDirectory 
+	 * @seedsDirectory 
+	 * @seedEnvironments 
+	 * @properties 
+	 */
+	MigrationService function init(
+		any manager,
+		string migrationsDirectory,
+		string seedsDirectory,
+		any seedEnvironments,
+		struct properties
+	) {
 		variables.managerProperties = {};
 		var args = arguments;
-		args.keyArray().each( function( key ){
+		args.keyArray()
+		.filter( function( key ){ return !isNull( args[ key ] ); } )
+		.each( function( key ){
 			if( isSimpleValue( args[ key ] ) ){
 				variables[ key ] = args[ key ];
 			} else if( key == "properties" ){
