@@ -10,16 +10,18 @@ component {
 
 	function configure() {
 		settings = {
-			defaultGrammar      : "BaseGrammar"
+			"manager" : "cfmigrations.models.QBMigrationManager",
+			"properties" : {
+				"defaultGrammar" : "BaseGrammar"
+			}
 		};
 
 	}
 
 	function onLoad(){
-		if( !settings.keyExists( "managers" ) ){
-
-			if( settings.keyExists( "defaultGrammar" ) && listLen( settings.defaultGrammar, "." ) < 2 ){
-				settings.defaultGrammar &= "@qb";
+		if( isSimpleValue( settings.manager ) ){
+			if( settings.properties.keyExists( "defaultGrammar" ) && listLen( settings.properties.defaultGrammar, "." ) < 2 ){
+				settings.properties.defaultGrammar &= "@qb";
 			}
 
 			binder
@@ -27,7 +29,7 @@ component {
 				.to( "#moduleMapping#.models.MigrationService" )
 				.initWith( argumentCollection=settings );
 		} else {
-			settings.managers.keyArray().each( function( key ){
+			settings.manager.keyArray().each( function( key ){
 				binder
 					.map( "MigrationService:" & key )
 					.to( "#moduleMapping#.models.MigrationService" )

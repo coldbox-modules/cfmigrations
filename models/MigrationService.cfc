@@ -6,41 +6,27 @@ component singleton accessors="true" {
 	property name="migrationsDirectory" default="/resources/database/migrations";
 	property name="seedsDirectory"      default="/resources/database/seeds";
 	property name="seedEnvironments"    default="development";
+	property name="managerProperties";
 
 
 	MigrationService function init() {
-		structAppend( variables, arguments, true );
+		variables.managerProperties = {};
+		var args = arguments;
+		args.keyArray().each( function( key ){
+			if( isSimpleValue( args[ key ] ) ){
+				variables[ key ] = args[ key ];
+			} else if( key == "properties" ){
+				variables.managerProperties = args[ key ];
+			}
+		});
+
+		if( isSimpleValue( variables.seedEnvironments) ) variables.seedEnvironments = listToArray( variables.seedEnvironments );
+
 		return this;
 	}
 
 	function onDIComplete() {
-		variables.manager = variables.wirebox.getInstance( variables.manager );
-
-		var omit = [
-			"wirebox",
-			"migrationsDirectory",
-			"seedsDirectory",
-			"manager"
-		];
-
-		var managerProperties = getMetadata( variables.manager ).properties.map( function( prop ) {
-			return prop.name;
-		} );
-
-		variables
-			.keyArray()
-			.filter( function( key ) {
-				return managerProperties.contains( key ) && isSimpleValue( variables[ key ] ) && !omit.contains( key );
-			} )
-			.each( function( key ) {
-				invoke(
-					variables.manager,
-					"set" & key,
-					variables[ key ]
-				);
-			} );
-
-		if( isSimpleValue( variables.seedEnvironments) ) variables.seedEnvironments = listToArray( variables.seedEnvironments );
+		variables.manager = variables.wirebox.getInstance( name=variables.manager, initArguments=variables.managerProperties );
 	}
 
 	public void function install( runAll = false ) {

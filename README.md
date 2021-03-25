@@ -56,14 +56,18 @@ moduleSettings = {
     "cfmigrations" : {
         // The manager handling and executing the migration files
         "manager" : "cfmigrations.models.QBMigrationManager",
-        // For the QB Migration manager, the default SQL grammar to use
-        "defaultGrammar" : "BaseGrammar@qb",
         // The directory containing the migration files
         "migrationsDirectory" : "/resources/database/migrations",
         // The directory containing any seeds, if applicable
         "seedsDirectory" : "/resources/database/seeds",
         // A comma-delimited list of environments which are allowed to run seeds
         "seedEnvironments" : "development"
+        // A struct of properties used to initialize the manager
+        "properties" : {
+            // For the QB Migration manager, the default SQL grammar to use
+            "defaultGrammar" : "BaseGrammar@qb",
+        }
+        
 
     }
 }
@@ -77,20 +81,26 @@ If you wish to use multiple managers, the DSL created by wirebox is a bit differ
 ```
 moduleSettings = {
     "cfmigrations": {
-        "managers": {
+        "manager": {
             "db1": {
                 "manager": "cfmigrations.models.QBMigrationManager",
                 "migrationsDirectory" : "/resources/database/db1/migrations",
-                "defaultGrammar" : "MySQLGrammar@qb",
-                "datasource" : "db1",
-                "useTransactions" : "false"
+                "seedsDirectory" : "/resources/database/db1/seeds",
+                "properties" : {
+                    "defaultGrammar" : "MySQLGrammar@qb",
+                    "datasource" : "db1",
+                    "useTransactions" : "false",    
+                }
             },
             "db2": {
                 "manager": "cfmigrations.models.QBMigrationManager",
                 "migrationsDirectory" : "/resources/database/db2/migrations",
-                "defaultGrammar" : "PostgresGrammar@qb",
-                "datasource" : "db2",
-                "useTransactions" : "true"
+                "seedsDirectory" : "/resources/database/db2/seeds",
+                "properties" : {
+                    "defaultGrammar" : "PostgresGrammar@qb",
+                    "datasource" : "db2",
+                    "useTransactions" : "true"    
+                }
             },
             "elasticsearch": {
                 "manager": "cbelasticearch.models.migrations.Manager",
