@@ -29,14 +29,22 @@ component singleton accessors="true" {
 		variables.manager = variables.wirebox.getInstance( name=variables.manager, initArguments=variables.managerProperties );
 	}
 
+	/**
+	 * Passes through to the manager's install method and runs all migrations if requested
+	 *
+	 * @runAll boolean  Whether to run all migrations after the managers install is performed
+	 */
 	public void function install( runAll = false ) {
-		variables.manager.install( argumentCollection = arguments );
+		variables.manager.install();
 
 		if ( runAll ) {
 			runAllMigrations( "up" );
 		}
 	}
 
+	/**
+	 * Runs all migrations down and requests an uninstall from the manager
+	 */
 	public void function uninstall() {
 		if ( !variables.manager.isReady() ) {
 			return;
@@ -47,10 +55,21 @@ component singleton accessors="true" {
 		variables.manager.uninstall();
 	}
 
+	/**
+	 * Resets the migrations to a new state
+	 */
 	public void function reset() {
 		return variables.manager.reset();
 	}
 
+	/**
+	 * Runs a single or group of migrations up
+	 *
+	 * @once  boolean When true, this will only run the first migration
+	 * @postProcessHook closure A closure which is run by the manager before the migration is performed
+	 * @preProcessHook closure A closure which is run by the manager after the migration is performed
+	 * @seed bolean Whether to run the seeders after migrations are performed
+	 */
 	public MigrationService function up(
 		boolean once = false,
 		postProcessHook,
@@ -72,6 +91,13 @@ component singleton accessors="true" {
 		return this;
 	}
 
+	/**
+	 * Runs a single or group of migrations up
+	 *
+	 * @once  boolean When true, this will only run the first migration found
+	 * @postProcessHook closure A closure which is run by the manager before the migration is performed
+	 * @preProcessHook closure A closure which is run by the manager after the migration is performed
+	 */
 	public MigrationService function down(
 		boolean once = false,
 		postProcessHook,
@@ -86,6 +112,11 @@ component singleton accessors="true" {
 		return this;
 	}
 
+	/**
+	 * Runs all or a single seed
+	 *
+	 * @seedName string when provided, only this seed will be run
+	 */
 	public MigrationService function seed( string seedName ) {
 		if( !isNull( variables.environment ) && !variables.seedEnvironments.containsNoCase( variables.environment ) ){
 			throw(
@@ -192,6 +223,11 @@ component singleton accessors="true" {
 		} );
 	}
 
+	/**
+	 * Returns all available migrations within a director
+	 *
+	 * @directory string the directory to list
+	 */
 	public array function findAll( string directory = variables.migrationsDirectory ) {
 		var migrationFiles = directoryList(
 			expandPath( arguments.directory ),
@@ -277,6 +313,11 @@ component singleton accessors="true" {
 		return migrations;
 	}
 
+	/**
+	 * Finds all seeds
+	 *
+	 * @seedName  when provided, only seeds matching this name will be returned
+	 */
 	public array function findSeeds( string seedName ) {
 
 		return directoryList(
@@ -310,6 +351,11 @@ component singleton accessors="true" {
 
 	}
 
+	/**
+	 * Determines whether there are migratiosn which need to be run
+	 *
+	 * @direction string  whether to filter for up or down migrations
+	 */
 	public boolean function hasMigrationsToRun( direction ) {
 		return !!findAll()
 			.filter( function( migration ) {
@@ -318,6 +364,14 @@ component singleton accessors="true" {
 			.len();
 	}
 
+	/**
+	 * Runs a single migration
+	 * 
+	 * @direction The direction for which to run the available migrations — `up` or `down`.
+	 * @migrationStruct A struct containing the meta of the migration to be run
+	 * @postProcessHook  A callback to run after running each migration.
+	 * @preProcessHook  A callback to run before running each migration.
+	 */
 	public void function runMigration(
 		direction,
 		migrationStruct,
@@ -340,14 +394,21 @@ component singleton accessors="true" {
 
 	}
 
+	/**
+	 * Determines whether a migration has been run
+	 *
+	 * @componentName The component to inspect
+	 */
 	private boolean function isMigrationRan( componentName ) {
 		return variables.manager.isMigrationRan( argumentCollection = arguments );
 	}
 
-	private void function logMigration( direction, componentName ) {
-		variables.manager.logMigration( argumentCollection = arguments );
-	}
 
+	/**
+	 * Determines whether the file is a valid migration file
+	 *
+	 * @fileName string the name of the file to test
+	 */
 	private boolean function isMigrationFile( filename ) {
 		return isDate(
 			replace(
@@ -359,6 +420,11 @@ component singleton accessors="true" {
 		);
 	}
 
+	/**
+	 * Extracts the timestamp from the filename
+	 * 
+	 * @fileName  The file name to extract from
+	 */
 	private any function extractTimestampFromFileName( fileName ) {
 		var timestampString = left( fileName, 17 );
 		var timestampParts  = listToArray( timestampString, "_" );

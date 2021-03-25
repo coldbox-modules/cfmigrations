@@ -11,7 +11,10 @@ component accessors="true" {
 		return isMigrationTableInstalled();
 	}
 
-	function install( runAll = false ) {
+	/**
+	 * Performs the necessary routines to setup the migration manager for operation
+	 */
+	function install() {
 		if ( isMigrationTableInstalled() ) {
 			return;
 		}
@@ -28,6 +31,9 @@ component accessors="true" {
 		);
 	}
 
+	/**
+	 * Uninstalls the migrations schema
+	 */
 	public void function uninstall() {
 		if ( !isMigrationTableInstalled() ) {
 			return;
@@ -40,11 +46,17 @@ component accessors="true" {
 		);
 	}
 
+	/**
+	 * Resets the database to an empty state
+	 */
 	public void function reset() {
 		var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) );
 		schema.dropAllObjects( options = { datasource : getDatasource() }, schema = getSchema() );
 	}
 
+	/**
+	 * Finds all processed migrations
+	 */
 	array function findProcessed() {
 		return wirebox.getInstance( "QueryBuilder@qb" )
 				.from( getMigrationsTable() )
@@ -56,12 +68,22 @@ component accessors="true" {
 	}
 
 
+	/**
+	 * Determines whether a migration has been run
+	 *
+	 * @componentName The component to inspect
+	 */
 	boolean function isMigrationRan( componentName ) {
 		var processed = findProcessed();
 		return processed.contains( componentName );
 	}
 
-
+	/**
+	 * Logs a migration as completed
+	 *
+	 * @direction  Whether to log it as up or down
+	 * @componentName The component name to log
+	 */
 	private void function logMigration( direction, componentName ) {
 		if ( direction == "up" ) {
 			queryExecute(
@@ -85,6 +107,14 @@ component accessors="true" {
 	}
 
 
+	/**
+	 * Runs a single migration
+	 * 
+	 * @direction The direction for which to run the available migrations — `up` or `down`.
+	 * @migrationStruct A struct containing the meta of the migration to be run
+	 * @postProcessHook  A callback to run after running each migration.
+	 * @preProcessHook  A callback to run before running each migration.
+	 */
 	public void function runMigration(
 		direction,
 		migrationStruct,
@@ -123,6 +153,9 @@ component accessors="true" {
 		postProcessHook( migrationStruct );
 	}
 
+	/**
+	 * Determines whether the migration table is installed
+	 */
 	public boolean function isMigrationTableInstalled() {
 		var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) );
 
@@ -133,6 +166,11 @@ component accessors="true" {
 		);
 	}
 
+	/**
+	 * Runs a single seed
+	 *
+	 * @invocationPath the component invocation path for the seed
+	 */
 	public void function runSeed(
 		required string invocationPath
 	) {
@@ -154,6 +192,11 @@ component accessors="true" {
 	}
 
 
+	/**
+	 * Transactional wrapper if `useTransactions` is on
+	 *
+	 * @target closure  the target to execute from within the transaction
+	 */
 	private function $transactioned( required target ) {
 		if ( variables.useTransactions ) {
 			transaction action="begin" {
