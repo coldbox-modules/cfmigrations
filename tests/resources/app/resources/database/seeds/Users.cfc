@@ -1,8 +1,7 @@
 component {
 
-	function run( schema, query ) {
-		var mockData = new testbox.system.modules.mockdatacfc.models.MockData();
-
+	function run( schema, query, mockData ) {
+	
 		var testUsers = mockData.mock(
 			argumentCollection = {
 				"$num"     : 20,

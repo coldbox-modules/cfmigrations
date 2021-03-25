@@ -181,11 +181,13 @@ component accessors="true" {
 
 		var query = wirebox.getInstance( "QueryBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) );
 
+		var mockData = wirebox.getInstance( "MockData@mockdatacfc" );
+
 		$transactioned( function() {
 			invoke(
 				seeder,
 				"run",
-				[ schema, query ]
+				[ schema, query, mockData ]
 			);
 		} );
 
