@@ -1,6 +1,7 @@
 component accessors="true" {
 
 	property name="wirebox" inject="wirebox";
+	property name="mockData" inject="MockData@mockdatacfc";
 	property name="defaultGrammar" default="AutoDiscover@qb";
 	property name="datasource";
 	property name="migrationsTable" default="cfmigrations";
@@ -181,13 +182,11 @@ component accessors="true" {
 
 		var query = wirebox.getInstance( "QueryBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) );
 
-		var mockData = wirebox.getInstance( "MockData@mockdatacfc" );
-
 		$transactioned( function() {
 			invoke(
 				seeder,
 				"run",
-				[ schema, query, mockData ]
+				[ schema, query, variables.mockData ]
 			);
 		} );
 
