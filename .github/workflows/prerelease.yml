@@ -66,8 +66,7 @@ jobs:
           DB_USER: cfmigrations_testing
           DB_PASSWORD: cfmigrations_testing
         run: |
-          box server stop
-          box server start cfengine=${{ matrix.cfengine }}
+          box server restart
           sleep 30
 
       - name: Run TestBox Tests
