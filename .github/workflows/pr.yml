@@ -58,9 +58,6 @@ jobs:
           box config set modules.commandbox-dotenv.checkEnvPreServerStart=false
           box server start cfengine=${{ matrix.cfengine }}
           sleep 30
-      
-      - name: Install dependencies
-        run: |
           box install --verbose
           box install ${{ matrix.coldbox }} --noSave
       
