@@ -61,7 +61,7 @@ jobs:
       
       - name: Install dependencies
         run: |
-          box install
+          box install --verbose
           box install ${{ matrix.coldbox }} --noSave
       
       - name: Restart server (so extensions are picked up)
