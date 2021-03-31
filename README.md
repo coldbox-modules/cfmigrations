@@ -54,34 +54,34 @@ The default configuration for the module settings are:
 ```
 moduleSettings = {
     "cfmigrations" : {
-        // The manager handling and executing the migration files
-        "manager" : "cfmigrations.models.QBMigrationManager",
-        // The directory containing the migration files
-        "migrationsDirectory" : "/resources/database/migrations",
-        // The directory containing any seeds, if applicable
-        "seedsDirectory" : "/resources/database/seeds",
-        // A comma-delimited list of environments which are allowed to run seeds
-        "seedEnvironments" : "development"
-        // A struct of properties used to initialize the manager
-        "properties" : {
-            // For the QB Migration manager, the default SQL grammar to use
-            "defaultGrammar" : "BaseGrammar@qb",
+        "managers" : {
+            "default" : {
+                // The manager handling and executing the migration files
+                "manager" : "cfmigrations.models.QBMigrationManager",
+                // The directory containing the migration files
+                "migrationsDirectory" : "/resources/database/migrations",
+                // The directory containing any seeds, if applicable
+                "seedsDirectory" : "/resources/database/seeds",
+                // A comma-delimited list of environments which are allowed to run seeds
+                "seedEnvironments" : "development"
+                "properties" : {
+                    "defaultGrammar" : "BaseGrammar@qb"
+                }
+            }
         }
-        
-
     }
 }
 ```
 
-With this configuration, the migration manager may be retrieved via wirebox at `MigrationService@cfmigrations`
+With this configuration, the migration manager may be retrieved via wirebox at `MigrationService:default`
 
 
-If you wish to use multiple managers, the DSL created by wirebox is a bit different.  Here is an example of a multi-manager migrations system.  Each separate manager will require their own configuration properties.
+Here is an example of a multi-manager migrations system.  Each separate manager will require their own configuration properties.
 
 ```
 moduleSettings = {
     "cfmigrations": {
-        "manager": {
+        "managers": {
             "db1": {
                 "manager": "cfmigrations.models.QBMigrationManager",
                 "migrationsDirectory" : "/resources/database/db1/migrations",
