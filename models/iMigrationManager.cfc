@@ -1,4 +1,4 @@
-interface{
+interface {
 
 	public boolean function isReady();
 
@@ -41,7 +41,7 @@ interface{
 
 	/**
 	 * Runs a single migration
-	 * 
+	 *
 	 * @direction The direction for which to run the available migrations — `up` or `down`.
 	 * @migrationStruct A struct containing the meta of the migration to be run
 	 * @postProcessHook  A callback to run after running each migration.
@@ -60,6 +60,5 @@ interface{
 	 * @invocationPath the component invocation path for the seed
 	 */
 	public void function runSeed( required string invocationPath );
-
 
 }

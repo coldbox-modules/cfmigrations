@@ -1,6 +1,6 @@
 component accessors="true" {
 
-	property name="wirebox" inject="wirebox";
+	property name="wirebox"  inject="wirebox";
 	property name="mockData" inject="MockData@mockdatacfc";
 	property name="defaultGrammar" default="AutoDiscover@qb";
 	property name="datasource";
@@ -59,13 +59,14 @@ component accessors="true" {
 	 * Finds all processed migrations
 	 */
 	array function findProcessed() {
-		return wirebox.getInstance( "QueryBuilder@qb" )
-				.from( getMigrationsTable() )
-				.setReturnFormat( "array" )
-				.get( [ "name" ], { "datasource" : getDatasource()  } )
-				.map( function( row ) {
-					return row.name;
-				} );
+		return wirebox
+			.getInstance( "QueryBuilder@qb" )
+			.from( getMigrationsTable() )
+			.setReturnFormat( "array" )
+			.get( [ "name" ], { "datasource" : getDatasource() } )
+			.map( function( row ) {
+				return row.name;
+			} );
 	}
 
 
@@ -110,7 +111,7 @@ component accessors="true" {
 
 	/**
 	 * Runs a single migration
-	 * 
+	 *
 	 * @direction The direction for which to run the available migrations — `up` or `down`.
 	 * @migrationStruct A struct containing the meta of the migration to be run
 	 * @postProcessHook  A callback to run after running each migration.
@@ -172,10 +173,7 @@ component accessors="true" {
 	 *
 	 * @invocationPath the component invocation path for the seed
 	 */
-	public void function runSeed(
-		required string invocationPath
-	) {
-		
+	public void function runSeed( required string invocationPath ) {
 		var seeder = wirebox.getInstance( arguments.invocationPath );
 
 		var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) );
@@ -189,7 +187,6 @@ component accessors="true" {
 				[ schema, query, variables.mockData ]
 			);
 		} );
-
 	}
 
 

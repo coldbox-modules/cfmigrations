@@ -1,7 +1,10 @@
 component singleton accessors="true" {
 
-	property name="wirebox" 			inject="wirebox";
-	property name="environment" 		inject="coldbox:setting:environment" default="development";
+	property name="wirebox" inject="wirebox";
+	property
+		name   ="environment"
+		inject ="coldbox:setting:environment"
+		default="development";
 	property name="manager"             default="cfmigrations.models.QBMigrationManager";
 	property name="migrationsDirectory" default="/resources/database/migrations";
 	property name="seedsDirectory"      default="/resources/database/seeds";
@@ -12,11 +15,11 @@ component singleton accessors="true" {
 	/**
 	 * Initializes the Migration Service instance
 	 *
-	 * @manager 
-	 * @migrationsDirectory 
-	 * @seedsDirectory 
-	 * @seedEnvironments 
-	 * @properties 
+	 * @manager
+	 * @migrationsDirectory
+	 * @seedsDirectory
+	 * @seedEnvironments
+	 * @properties
 	 */
 	MigrationService function init(
 		any manager,
@@ -26,24 +29,30 @@ component singleton accessors="true" {
 		struct properties
 	) {
 		variables.managerProperties = {};
-		var args = arguments;
+		var args                    = arguments;
 		args.keyArray()
-		.filter( function( key ){ return !isNull( args[ key ] ); } )
-		.each( function( key ){
-			if( isSimpleValue( args[ key ] ) ){
-				variables[ key ] = args[ key ];
-			} else if( key == "properties" ){
-				variables.managerProperties = args[ key ];
-			}
-		});
+			.filter( function( key ) {
+				return !isNull( args[ key ] );
+			} )
+			.each( function( key ) {
+				if ( isSimpleValue( args[ key ] ) ) {
+					variables[ key ] = args[ key ];
+				} else if ( key == "properties" ) {
+					variables.managerProperties = args[ key ];
+				}
+			} );
 
-		if( isSimpleValue( variables.seedEnvironments) ) variables.seedEnvironments = listToArray( variables.seedEnvironments );
+		if ( isSimpleValue( variables.seedEnvironments ) )
+			variables.seedEnvironments = listToArray( variables.seedEnvironments );
 
 		return this;
 	}
 
 	function onDIComplete() {
-		variables.manager = variables.wirebox.getInstance( name=variables.manager, initArguments=variables.managerProperties );
+		variables.manager = variables.wirebox.getInstance(
+			name          = variables.manager,
+			initArguments = variables.managerProperties
+		);
 	}
 
 	/**
@@ -135,7 +144,7 @@ component singleton accessors="true" {
 	 * @seedName string when provided, only this seed will be run
 	 */
 	public MigrationService function seed( string seedName ) {
-		if( !isNull( variables.environment ) && !variables.seedEnvironments.containsNoCase( variables.environment ) ){
+		if ( !isNull( variables.environment ) && !variables.seedEnvironments.containsNoCase( variables.environment ) ) {
 			throw(
 				"You have attempted to run seeds in an unauthorized environment ( #variables.environment# ). Authorized environments are #variables.seedEnvironments.toList()#"
 			);
@@ -143,7 +152,7 @@ component singleton accessors="true" {
 
 		if ( !directoryExists( expandPath( variables.seedsDirectory ) ) ) return this;
 
-		findSeeds( argumentCollection=arguments ).each( function( file ) {
+		findSeeds( argumentCollection = arguments ).each( function( file ) {
 			variables.manager.runSeed( file.componentPath );
 		} );
 
@@ -254,12 +263,12 @@ component singleton accessors="true" {
 			"name",
 			"file"
 		).reduce( function( result, row ) {
-			result.append( row );
-			return result;
-		}, [] )
-		.filter( function( item ) {
-			return isMigrationFile( item.name );
-		} );
+				result.append( row );
+				return result;
+			}, [] )
+			.filter( function( item ) {
+				return isMigrationFile( item.name );
+			} );
 
 
 		var processed = variables.manager.findProcessed();
@@ -336,7 +345,6 @@ component singleton accessors="true" {
 	 * @seedName  when provided, only seeds matching this name will be returned
 	 */
 	public array function findSeeds( string seedName ) {
-
 		return directoryList(
 			expandPath( variables.seedsDirectory ),
 			false,
@@ -345,27 +353,25 @@ component singleton accessors="true" {
 			"name",
 			"file"
 		).reduce( function( result, row ) {
-			result.append( row );
-			return result;
-		}, [] )
-		.map( function( file ){
-			var componentName = left( file.name, len( file.name ) - 4 );
-			structAppend(
-				file,
-				{
-					"componentName" : componentName,
-					"componentPath" : listChangeDelims(
-										variables.seedsDirectory & "/" & componentName,
-										".",
-										"/",
-										false
-									)
-				}
-			);
-			return file;
-		} )
-
-
+				result.append( row );
+				return result;
+			}, [] )
+			.map( function( file ) {
+				var componentName = left( file.name, len( file.name ) - 4 );
+				structAppend(
+					file,
+					{
+						"componentName" : componentName,
+						"componentPath" : listChangeDelims(
+							variables.seedsDirectory & "/" & componentName,
+							".",
+							"/",
+							false
+						)
+					}
+				);
+				return file;
+			} )
 	}
 
 	/**
@@ -383,7 +389,7 @@ component singleton accessors="true" {
 
 	/**
 	 * Runs a single migration
-	 * 
+	 *
 	 * @direction The direction for which to run the available migrations — `up` or `down`.
 	 * @migrationStruct A struct containing the meta of the migration to be run
 	 * @postProcessHook  A callback to run after running each migration.
@@ -408,7 +414,6 @@ component singleton accessors="true" {
 		}
 
 		variables.manager.runMigration( argumentCollection = arguments );
-
 	}
 
 	/**
@@ -439,7 +444,7 @@ component singleton accessors="true" {
 
 	/**
 	 * Extracts the timestamp from the filename
-	 * 
+	 *
 	 * @fileName  The file name to extract from
 	 */
 	private any function extractTimestampFromFileName( fileName ) {

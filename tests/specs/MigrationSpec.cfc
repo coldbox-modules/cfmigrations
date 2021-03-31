@@ -125,9 +125,11 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
 				expect( qb.from( "users" ).count() ).toBe( 20, "The seeder data was not inserted" );
 			} );
 
-			it( "Will throw an error if attempting to run seeds in an unauthorized environment", function(){
+			it( "Will throw an error if attempting to run seeds in an unauthorized environment", function() {
 				variables.migrationService.setSeedEnvironments( [ "foo" ] );
-				expect( function(){ variables.migrationService.seed(); } ).toThrow();
+				expect( function() {
+					variables.migrationService.seed();
+				} ).toThrow();
 			} );
 		} );
 	}
