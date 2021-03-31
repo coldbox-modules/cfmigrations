@@ -159,13 +159,9 @@ component accessors="true" {
      */
     public void function runSeed( required string invocationPath ) {
         var seeder = wirebox.getInstance( arguments.invocationPath );
-
-        var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) );
-
         var query = wirebox.getInstance( "QueryBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) );
-
         $transactioned( function() {
-            invoke( seeder, "run", [ schema, query, variables.mockData ] );
+            invoke( seeder, "run", [ query, variables.mockData ] );
         } );
     }
 

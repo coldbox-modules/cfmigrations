@@ -39,8 +39,9 @@ component singleton accessors="true" {
                 }
             } );
 
-        if ( isSimpleValue( variables.seedEnvironments ) )
+        if ( isSimpleValue( variables.seedEnvironments ) ) {
             variables.seedEnvironments = listToArray( variables.seedEnvironments );
+        }
 
         return this;
     }
