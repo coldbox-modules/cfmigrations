@@ -1,6 +1,6 @@
 component {
 
-	function run( schema, query, mockData ) {
+	function run( qb, mockData ) {
 	
 		var testUsers = mockData.mock(
 			argumentCollection = {
@@ -10,7 +10,7 @@ component {
 			}
 		);
 
-		query.table( "users" ).insert( testUsers );
+		qb.table( "users" ).insert( testUsers );
 	}
 
 }

@@ -1,6 +1,6 @@
 component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
 
-    property name="migrationService" inject="MigrationService@cfmigrations";
+    property name="migrationService" inject="migrationService:default";
     property name="schema" inject="provider:SchemaBuilder@qb";
     property name="qb" inject="provider:QueryBuilder@qb";
 
