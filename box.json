@@ -37,8 +37,7 @@
     "installPaths":{
         "qb":"modules/qb/",
         "testbox":"testbox/",
-        "coldbox":"tests/resources/app/coldbox/",
-        "orgluceepostgresql830jdbc4lex":"orgluceepostgresql830jdbc4lex/"
+        "coldbox":"tests/resources/app/coldbox/"
     },
     "devDependencies":{
         "testbox":"^3.2.0+356",

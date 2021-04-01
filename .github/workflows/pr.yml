@@ -61,7 +61,6 @@ jobs:
       
       - name: Install dependencies
         run: |
-          box server info
           box install --verbose
           box install ${{ matrix.coldbox }} --noSave
       
