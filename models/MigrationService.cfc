@@ -1,374 +1,451 @@
 component singleton accessors="true" {
 
-	property name="wirebox" inject="wirebox";
-	property name="migrationsDirectory" default="/resources/database/migrations";
-	property name="datasource";
-	property name="defaultGrammar"  default="AutoDiscover@qb";
-	property name="schema"          default="";
-	property name="migrationsTable" default="cfmigrations";
+    property name="wirebox" inject="wirebox";
+    property name="environment" inject="coldbox:setting:environment" default="development";
+    property name="manager" default="cfmigrations.models.QBMigrationManager";
+    property name="migrationsDirectory" default="/resources/database/migrations";
+    property name="seedsDirectory" default="/resources/database/seeds";
+    property name="seedEnvironments" default="development";
+    property name="managerProperties";
 
-	public MigrationService function up(
-		boolean once = false,
-		postProcessHook,
-		preProcessHook
-	) {
-		arguments.direction = "up";
-		if ( arguments.once ) {
-			runNextMigration( argumentCollection = arguments );
-		} else {
-			runAllMigrations( argumentCollection = arguments );
-		}
-		return this;
-	}
 
-	public MigrationService function down(
-		boolean once = false,
-		postProcessHook,
-		preProcessHook
-	) {
-		arguments.direction = "down";
-		if ( arguments.once ) {
-			runNextMigration( argumentCollection = arguments );
-		} else {
-			runAllMigrations( argumentCollection = arguments );
-		}
-		return this;
-	}
+    /**
+     * Initializes the Migration Service instance
+     *
+     * @manager
+     * @migrationsDirectory
+     * @seedsDirectory
+     * @seedEnvironments
+     * @properties
+     */
+    MigrationService function init(
+        any manager,
+        string migrationsDirectory,
+        string seedsDirectory,
+        any seedEnvironments,
+        struct properties
+    ) {
+        variables.managerProperties = {};
+        var args = arguments;
+        args.keyArray()
+            .filter( function( key ) {
+                return !isNull( args[ key ] );
+            } )
+            .each( function( key ) {
+                if ( isSimpleValue( args[ key ] ) ) {
+                    variables[ key ] = args[ key ];
+                } else if ( key == "properties" ) {
+                    variables.managerProperties = args[ key ];
+                }
+            } );
 
-	/**
-	 * Run the next available migration in the desired direction.
-	 *
-	 * @direction The direction in which to look for the next available migration — `up` or `down`.
-	 * @postProcessHook  A callback to run after running each migration.
-	 * @preProcessHook  A callback to run before running each migration.
-	 *
-	 * @return    The ran migration information struct
-	 */
-	public struct function runNextMigration(
-		required string direction,
-		postProcessHook,
-		preProcessHook
-	) {
-		if ( isNull( postProcessHook ) ) {
-			postProcessHook = function() {
-			};
-		}
-		if ( isNull( preProcessHook ) ) {
-			preProcessHook = function() {
-			};
-		}
+        if ( isSimpleValue( variables.seedEnvironments ) ) {
+            variables.seedEnvironments = listToArray( variables.seedEnvironments );
+        }
 
-		install();
+        return this;
+    }
 
-		var migrations = findAll();
+    function onDIComplete() {
+        variables.manager = variables.wirebox.getInstance(
+            name = variables.manager,
+            initArguments = variables.managerProperties
+        );
+    }
 
-		for ( var migration in migrations ) {
-			var canMigrateInDirection = migration[ "canMigrate#direction#" ];
-			if ( canMigrateInDirection ) {
-				runMigration(
-					arguments.direction,
-					migration,
-					postProcessHook,
-					preProcessHook
-				);
-				return migration;
-			}
-		}
+    /**
+     * Passes through to the manager's install method and runs all migrations if requested
+     *
+     * @runAll boolean  Whether to run all migrations after the managers install is performed
+     */
+    public void function install( runAll = false ) {
+        variables.manager.install();
 
-		return {};
-	}
+        if ( runAll ) {
+            runAllMigrations( "up" );
+        }
+    }
 
-	/**
-	 * Run all available migrations in the desired direction.
-	 *
-	 * @direction The direction for which to run the available migrations — `up` or `down`.
-	 * @postProcessHook  A callback to run after running each migration.
-	 * @preProcessHook  A callback to run before running each migration.
-	 *
-	 * @return    void
-	 */
-	public void function runAllMigrations(
-		direction,
-		postProcessHook,
-		preProcessHook
-	) {
-		if ( isNull( postProcessHook ) ) {
-			postProcessHook = function() {
-			};
-		}
-		if ( isNull( preProcessHook ) ) {
-			preProcessHook = function() {
-			};
-		}
+    /**
+     * Runs all migrations down and requests an uninstall from the manager
+     */
+    public void function uninstall() {
+        if ( !variables.manager.isReady() ) {
+            return;
+        }
 
-		install();
+        runAllMigrations( "down" );
 
-		var migrations = arrayFilter( findAll(), function( migration ) {
-			return direction == "up" ? !migration.migrated : migration.migrated;
-		} );
+        variables.manager.uninstall();
+    }
 
-		if ( direction == "down" ) {
-			// sort in reversed order to get which migrations can be brought down
-			// cannot use arrayReverse since it is Lucee only
-			arraySort( migrations, function( a, b ) {
-				return dateCompare( b.timestamp, a.timestamp );
-			} );
-		}
+    /**
+     * Resets the migrations to a new state
+     */
+    public void function reset() {
+        return variables.manager.reset();
+    }
 
-		arrayEach( migrations, function( migration ) {
-			runMigration(
-				direction,
-				migration,
-				postProcessHook,
-				preProcessHook
-			);
-		} );
-	}
+    /**
+     * Runs a single or group of migrations up
+     *
+     * @once  boolean When true, this will only run the first migration
+     * @postProcessHook closure A closure which is run by the manager before the migration is performed. Defaults to an empty function.
+     * @preProcessHook closure A closure which is run by the manager after the migration is performed. Defaults to an empty function.
+     * @seed bolean Whether to run the seeders after migrations are performed
+     */
+    public MigrationService function up(
+        boolean once = false,
+        function postProcessHook = variables.noop,
+        function preProcessHook = variables.noop,
+        boolean seed = false
+    ) {
+        arguments.direction = "up";
 
-	public array function findAll() {
-		var migrationTableInstalled = isMigrationTableInstalled();
+        if ( arguments.once ) {
+            runNextMigration( argumentCollection = arguments );
+        } else {
+            runAllMigrations( argumentCollection = arguments );
+        }
 
-		var objectsQuery = directoryList(
-			expandPath( migrationsDirectory ),
-			false,
-			"query"
-		);
-		var objectsArray = [];
-		for ( var row in objectsQuery ) {
-			arrayAppend( objectsArray, row );
-		}
-		var onlyCFCs = arrayFilter( objectsArray, function( object ) {
-			return object.type == "File" &&
-			right( object.name, 4 ) == ".cfc" &&
-			isMigrationFile( object.name );
-		} );
+        if ( arguments.seed ) {
+            this.seed();
+        }
 
-		arraySort( onlyCFCs, function( a, b ) {
-			return dateCompare( extractTimestampFromFileName( a.name ), extractTimestampFromFileName( b.name ) );
-		} );
+        return this;
+    }
 
-		var prequisitesInstalled = true;
-		var migrations           = arrayMap( onlyCFCs, function( file ) {
-			var timestamp     = extractTimestampFromFileName( file.name );
-			var componentName = left( file.name, len( file.name ) - 4 );
-			var migrationRan  = migrationTableInstalled ? isMigrationRan( componentName ) : false;
+    /**
+     * Runs a single or group of migrations up
+     *
+     * @once  boolean When true, this will only run the first migration found
+     * @postProcessHook closure A closure which is run by the manager before the migration is performed. Defaults to an empty function.
+     * @preProcessHook closure A closure which is run by the manager after the migration is performed. Defaults to an empty function.
+     */
+    public MigrationService function down(
+        boolean once = false,
+        function postProcessHook = variables.noop,
+        function preProcessHook = variables.noop
+    ) {
+        arguments.direction = "down";
+        if ( arguments.once ) {
+            runNextMigration( argumentCollection = arguments );
+        } else {
+            runAllMigrations( argumentCollection = arguments );
+        }
+        return this;
+    }
 
-			var migration = {
-				fileName      : file.name,
-				componentName : componentName,
-				absolutePath  : file.directory & "/" & file.name,
-				componentPath : listChangeDelims(
-					migrationsDirectory & "/" & componentName,
-					".",
-					"/",
-					false
-				),
-				timestamp      : timestamp,
-				migrated       : migrationRan,
-				canMigrateUp   : !migrationRan && prequisitesInstalled,
-				canMigrateDown : migrationRan,
-				migratedDate   : ""
-			};
+    /**
+     * Runs all or a single seed
+     *
+     * @seedName string when provided, only this seed will be run
+     */
+    public MigrationService function seed( string seedName ) {
+        if (
+            !isNull( variables.environment ) && !arrayContainsNoCase(
+                variables.seedEnvironments,
+                variables.environment
+            )
+        ) {
+            throw(
+                "You have attempted to run seeds in an unauthorized environment ( #variables.environment# ). Authorized environments are #variables.seedEnvironments.toList()#"
+            );
+        }
 
-			prequisitesInstalled = migrationRan;
+        if ( !directoryExists( expandPath( variables.seedsDirectory ) ) ) return this;
 
-			return migration;
-		} );
+        findSeeds( argumentCollection = arguments ).each( function( file ) {
+            variables.manager.runSeed( file.componentPath );
+        } );
 
-		if ( !migrationTableInstalled && !arrayIsEmpty( migrations ) ) {
-			arrayEach( migrations, function( migration ) {
-				migration.canMigrateUp   = false;
-				migration.canMigrateDown = false;
-			} );
+        return this;
+    }
 
-			// sort in the correct order
-			arraySort( migrations, function( a, b ) {
-				return dateCompare( a.timestamp, b.timestamp );
-			} );
+    /**
+     * Run the next available migration in the desired direction.
+     *
+     * @direction The direction in which to look for the next available migration — `up` or `down`.
+     * @postProcessHook  A callback to run after running each migration. Defaults to an empty function.
+     * @preProcessHook  A callback to run before running each migration. Defaults to an empty function.
+     *
+     * @return    The ran migration information struct
+     */
+    public struct function runNextMigration(
+        required string direction,
+        function postProcessHook = variables.noop,
+        function preProcessHook = variables.noop
+    ) {
+        install();
 
-			return migrations;
-		}
+        var migrations = findAll();
 
-		// sort in reversed order to get which migrations can be brought down
-		arraySort( migrations, function( a, b ) {
-			return dateCompare( b.timestamp, a.timestamp );
-		} );
+        for ( var migration in migrations ) {
+            var canMigrateInDirection = migration[ "canMigrate#direction#" ];
+            if ( canMigrateInDirection ) {
+                runMigration(
+                    arguments.direction,
+                    migration,
+                    postProcessHook,
+                    preProcessHook
+                );
+                return migration;
+            }
+        }
 
-		var laterMigrationsNotInstalled = true;
-		arrayEach( migrations, function( migration ) {
-			migration.canMigrateDown    = migration.migrated && laterMigrationsNotInstalled;
-			laterMigrationsNotInstalled = !migration.migrated;
-		} );
+        return {};
+    }
 
-		// sort in the correct order
-		arraySort( migrations, function( a, b ) {
-			return dateCompare( a.timestamp, b.timestamp );
-		} );
+    /**
+     * Run all available migrations in the desired direction.
+     *
+     * @direction The direction for which to run the available migrations — `up` or `down`.
+     * @postProcessHook  A callback to run after running each migration. Defaults to an empty function.
+     * @preProcessHook  A callback to run before running each migration. Defaults to an empty function.
+     *
+     * @return    void
+     */
+    public void function runAllMigrations(
+        required string direction,
+        function postProcessHook = variables.noop,
+        function preProcessHook = variables.noop
+    ) {
+        install();
 
-		return migrations;
-	}
+        var migrations = arrayFilter( findAll(), function( migration ) {
+            return direction == "up" ? !migration.migrated : migration.migrated;
+        } );
 
-	public boolean function hasMigrationsToRun( direction ) {
-		return !arrayIsEmpty(
-			arrayFilter( findAll(), function( migration ) {
-				return direction == "up" ? !migration.migrated : migration.migrated;
-			} )
-		);
-	}
+        if ( arguments.direction == "down" ) {
+            // sort in reversed order to get which migrations can be brought down
+            // cannot use arrayReverse since it is Lucee only
+            arraySort( migrations, function( a, b ) {
+                return dateCompare( b.timestamp, a.timestamp );
+            } );
+        }
 
-	public void function install( runAll = false ) {
-		if ( isMigrationTableInstalled() ) {
-			return;
-		}
+        arrayEach( migrations, function( migration ) {
+            runMigration(
+                direction,
+                migration,
+                postProcessHook,
+                preProcessHook
+            );
+        } );
+    }
 
-		var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) );
+    /**
+     * Returns all available migrations within a director
+     *
+     * @directory string the directory to list
+     */
+    public array function findAll( string directory = variables.migrationsDirectory ) {
+        var migrationFiles = directoryList(
+            expandPath( arguments.directory ),
+            false,
+            "query",
+            "*.cfc",
+            "name",
+            "file"
+        ).reduce( function( result, row ) {
+                result.append( row );
+                return result;
+            }, [] )
+            .filter( function( item ) {
+                return isMigrationFile( item.name );
+            } );
 
-		schema.create(
-			getMigrationsTable(),
-			function( table ) {
-				table.string( "name", 190 ).primaryKey();
-				table.datetime( "migration_ran" );
-			},
-			{ datasource : getDatasource() }
-		);
+        var processed = variables.manager.findProcessed();
 
-		if ( runAll ) {
-			runAllMigrations( "up" );
-		}
-	}
+        var prequisitesInstalled = true;
+        var managerIsReady = variables.manager.isReady();
 
-	public void function uninstall() {
-		if ( !isMigrationTableInstalled() ) {
-			return;
-		}
+        var migrations = migrationFiles.map( function( file ) {
+            var timestamp = extractTimestampFromFileName( file.name );
+            var componentName = left( file.name, len( file.name ) - 4 );
+            var migrationRan = managerIsReady ? processed.contains( componentName ) : false;
 
-		runAllMigrations( "down" );
+            var migration = {
+                fileName: file.name,
+                componentName: componentName,
+                absolutePath: file.directory & "/" & file.name,
+                componentPath: listChangeDelims(
+                    directory & "/" & componentName,
+                    ".",
+                    "/",
+                    false
+                ),
+                timestamp: timestamp,
+                migrated: migrationRan,
+                canMigrateUp: !migrationRan && prequisitesInstalled,
+                canMigrateDown: migrationRan,
+                migratedDate: ""
+            };
 
-		queryExecute(
-			"DROP TABLE #getMigrationsTable()#",
-			{},
-			{ datasource : getDatasource() }
-		);
-	}
+            prequisitesInstalled = migrationRan;
 
-	public void function reset() {
-		var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) );
-		schema.dropAllObjects( options = { datasource : getDatasource() }, schema = getSchema() );
-	}
+            return migration;
+        } );
 
-	public boolean function isMigrationTableInstalled() {
-		var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) );
 
-		return schema.hasTable(
-			getMigrationsTable(),
-			getSchema(),
-			{ datasource : getDatasource() }
-		);
-	}
 
-	public void function runMigration(
-		direction,
-		migrationStruct,
-		postProcessHook,
-		preProcessHook
-	) {
-		install();
+        if ( !managerIsReady ) {
+            arrayEach( migrations, function( migration ) {
+                migration.canMigrateUp = false;
+                migration.canMigrateDown = false;
+            } );
 
-		var migrationRan = isMigrationRan( migrationStruct.componentName );
+            // sort in the correct order
+            arraySort( migrations, function( a, b ) {
+                return dateCompare( a.timestamp, b.timestamp );
+            } );
 
-		if ( migrationRan && direction == "up" ) {
-			throw( "Cannot run a migration that has already been ran." );
-		}
+            return migrations;
+        }
 
-		if ( !migrationRan && direction == "down" ) {
-			throw( "Cannot rollback a migration if it hasn't been ran yet." );
-		}
+        // sort in reversed order to get which migrations can be brought down
+        migrations.sort( function( a, b ) {
+            return dateCompare( b.timestamp, a.timestamp );
+        } );
 
-		var migration = wirebox.getInstance( migrationStruct.componentPath );
+        var laterMigrationsNotInstalled = true;
 
-		var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) );
+        migrations.each( function( migration ) {
+            migration.canMigrateDown = migration.migrated && laterMigrationsNotInstalled;
+            laterMigrationsNotInstalled = !migration.migrated;
+        } );
 
-		var query = wirebox.getInstance( "QueryBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) );
+        // resort to timestamp asc
+        migrations.sort( function( a, b ) {
+            return dateCompare( a.timestamp, b.timestamp );
+        } );
 
-		preProcessHook( migrationStruct );
-		transaction action="begin" {
-			try {
-				invoke(
-					migration,
-					direction,
-					[ schema, query ]
-				);
-				logMigration( direction, migrationStruct.componentName );
-			} catch ( any e ) {
-				transaction action="rollback";
-				rethrow;
-			}
-		}
-		postProcessHook( migrationStruct );
-	}
+        return migrations;
+    }
 
-	private boolean function isMigrationRan( componentName ) {
-		var migrations = queryExecute(
-			"
-                SELECT name
-                FROM #getMigrationsTable()#
-            ",
-			{},
-			{ datasource : getDatasource() }
-		);
+    /**
+     * Finds all seeds
+     *
+     * @seedName  when provided, only seeds matching this name will be returned
+     */
+    public array function findSeeds( string seedName ) {
+        return directoryList(
+            expandPath( variables.seedsDirectory ),
+            false,
+            "query",
+            arguments.keyExists( "seedName" ) ? arguments.seedName & ".cfc" : "*.cfc",
+            "name",
+            "file"
+        ).reduce( function( result, row ) {
+                result.append( row );
+                return result;
+            }, [] )
+            .map( function( file ) {
+                var componentName = left( file.name, len( file.name ) - 4 );
+                structAppend(
+                    file,
+                    {
+                        "componentName": componentName,
+                        "componentPath": listChangeDelims(
+                            variables.seedsDirectory & "/" & componentName,
+                            ".",
+                            "/",
+                            false
+                        )
+                    }
+                );
+                return file;
+            } );
+    }
 
-		for ( var migration in migrations ) {
-			if ( migration.name == componentName ) {
-				return true;
-			}
-		}
-		return false;
-	}
+    /**
+     * Determines whether there are migratiosn which need to be run
+     *
+     * @direction string  whether to filter for up or down migrations
+     */
+    public boolean function hasMigrationsToRun( direction ) {
+        return !!findAll()
+            .filter( function( migration ) {
+                return direction == "up" ? !migration.migrated : migration.migrated;
+            } )
+            .len();
+    }
 
-	private void function logMigration( direction, componentName ) {
-		if ( direction == "up" ) {
-			queryExecute(
-				"INSERT INTO #getMigrationsTable()# VALUES ( :name, :time )",
-				{
-					name : componentName,
-					time : {
-						value     : now(),
-						cfsqltype : "CF_SQL_TIMESTAMP"
-					}
-				},
-				{ datasource : getDatasource() }
-			);
-		} else {
-			queryExecute(
-				"DELETE FROM #getMigrationsTable()# WHERE name = :name",
-				{ name : componentName },
-				{ datasource : getDatasource() }
-			);
-		}
-	}
+    /**
+     * Runs a single migration
+     *
+     * @direction The direction for which to run the available migrations — `up` or `down`.
+     * @migrationStruct A struct containing the meta of the migration to be run
+     * @postProcessHook  A callback to run after running each migration.
+     * @preProcessHook  A callback to run before running each migration.
+     */
+    public void function runMigration(
+        required string direction,
+        required struct migrationStruct,
+        function postProcessHook = variables.noop,
+        function preProcessHook = variables.noop
+    ) {
+        install();
 
-	private boolean function isMigrationFile( filename ) {
-		return isDate(
-			replace(
-				left( filename, 10 ),
-				"_",
-				"-",
-				"all"
-			)
-		);
-	}
+        var migrationRan = isMigrationRan( migrationStruct.componentName );
 
-	private any function extractTimestampFromFileName( fileName ) {
-		var timestampString = left( fileName, 17 );
-		var timestampParts  = listToArray( timestampString, "_" );
-		return createDateTime(
-			timestampParts[ 1 ],
-			timestampParts[ 2 ],
-			timestampParts[ 3 ],
-			mid( timestampParts[ 4 ], 1, 2 ),
-			mid( timestampParts[ 4 ], 3, 2 ),
-			mid( timestampParts[ 4 ], 5, 2 )
-		);
-	}
+        if ( migrationRan && direction == "up" ) {
+            throw( "Cannot run a migration that has already been ran." );
+        }
+
+        if ( !migrationRan && direction == "down" ) {
+            throw( "Cannot rollback a migration if it hasn't been ran yet." );
+        }
+
+        variables.manager.runMigration( argumentCollection = arguments );
+    }
+
+    /**
+     * Determines whether a migration has been run
+     *
+     * @componentName The component to inspect
+     */
+    private boolean function isMigrationRan( componentName ) {
+        return variables.manager.isMigrationRan( argumentCollection = arguments );
+    }
+
+
+    /**
+     * Determines whether the file is a valid migration file
+     *
+     * @fileName string the name of the file to test
+     */
+    private boolean function isMigrationFile( filename ) {
+        return isDate(
+            replace(
+                left( filename, 10 ),
+                "_",
+                "-",
+                "all"
+            )
+        );
+    }
+
+    /**
+     * Extracts the timestamp from the filename
+     *
+     * @fileName  The file name to extract from
+     */
+    private any function extractTimestampFromFileName( fileName ) {
+        var timestampString = left( fileName, 17 );
+        var timestampParts = listToArray( timestampString, "_" );
+        return createDateTime(
+            timestampParts[ 1 ],
+            timestampParts[ 2 ],
+            timestampParts[ 3 ],
+            mid( timestampParts[ 4 ], 1, 2 ),
+            mid( timestampParts[ 4 ], 3, 2 ),
+            mid( timestampParts[ 4 ], 5, 2 )
+        );
+    }
+
+    private void function noop() {
+        return; // intentionally does nothing
+    }
 
 }
