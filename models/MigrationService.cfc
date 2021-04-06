@@ -96,10 +96,8 @@ component singleton accessors="true" {
      */
     public MigrationService function up(
         boolean once = false,
-        function postProcessHook = function() {
-        },
-        function preProcessHook = function() {
-        },
+        function postProcessHook = variables.noop,
+        function preProcessHook = variables.noop,
         boolean seed = false
     ) {
         arguments.direction = "up";
@@ -126,10 +124,8 @@ component singleton accessors="true" {
      */
     public MigrationService function down(
         boolean once = false,
-        function postProcessHook = function() {
-        },
-        function preProcessHook = function() {
-        }
+        function postProcessHook = variables.noop,
+        function preProcessHook = variables.noop
     ) {
         arguments.direction = "down";
         if ( arguments.once ) {
@@ -146,7 +142,12 @@ component singleton accessors="true" {
      * @seedName string when provided, only this seed will be run
      */
     public MigrationService function seed( string seedName ) {
-        if ( !isNull( variables.environment ) && !variables.seedEnvironments.containsNoCase( variables.environment ) ) {
+        if (
+            !isNull( variables.environment ) && !arrayContainsNoCase(
+                variables.seedEnvironments,
+                variables.environment
+            )
+        ) {
             throw(
                 "You have attempted to run seeds in an unauthorized environment ( #variables.environment# ). Authorized environments are #variables.seedEnvironments.toList()#"
             );
@@ -172,10 +173,8 @@ component singleton accessors="true" {
      */
     public struct function runNextMigration(
         required string direction,
-        function postProcessHook = function() {
-        },
-        function preProcessHook = function() {
-        }
+        function postProcessHook = variables.noop,
+        function preProcessHook = variables.noop
     ) {
         install();
 
@@ -208,10 +207,8 @@ component singleton accessors="true" {
      */
     public void function runAllMigrations(
         required string direction,
-        function postProcessHook = function() {
-        },
-        function preProcessHook = function() {
-        }
+        function postProcessHook = variables.noop,
+        function preProcessHook = variables.noop
     ) {
         install();
 
@@ -383,12 +380,10 @@ component singleton accessors="true" {
      * @preProcessHook  A callback to run before running each migration.
      */
     public void function runMigration(
-        direction,
-        migrationStruct,
-        postProcessHook = function() {
-        },
-        preProcessHook = function() {
-        }
+        required string direction,
+        required struct migrationStruct,
+        function postProcessHook = variables.noop,
+        function preProcessHook = variables.noop
     ) {
         install();
 
@@ -447,6 +442,10 @@ component singleton accessors="true" {
             mid( timestampParts[ 4 ], 3, 2 ),
             mid( timestampParts[ 4 ], 5, 2 )
         );
+    }
+
+    private void function noop() {
+        return; // intentionally does nothing
     }
 
 }

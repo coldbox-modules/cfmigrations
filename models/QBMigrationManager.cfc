@@ -110,10 +110,8 @@ component accessors="true" {
     public void function runMigration(
         required string direction,
         required struct migrationStruct,
-        function postProcessHook = function() {
-        },
-        function preProcessHook = function() {
-        }
+        function postProcessHook = variables.noop,
+        function preProcessHook = variables.noop
     ) {
         install();
 
@@ -184,6 +182,10 @@ component accessors="true" {
         } else {
             arguments.target();
         }
+    }
+
+    private void function noop() {
+        return; // intentionally does nothing
     }
 
 }

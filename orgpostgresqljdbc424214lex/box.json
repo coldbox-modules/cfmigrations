@@ -1,0 +1,7 @@
+{
+    "location":"lex:https://ext.lucee.org/org.postgresql.jdbc42-42.1.4.lex",
+    "name":"orgpostgresqljdbc424214lex.lex",
+    "slug":"orgpostgresqljdbc424214lex",
+    "type":"lucee-extensions",
+    "version":"0.0.0"
+}
