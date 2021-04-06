@@ -39,8 +39,7 @@
         "qb":"modules/qb/",
         "testbox":"testbox/",
         "coldbox":"tests/resources/app/coldbox/",
-        "mockdatacfc":"modules/mockdatacfc/",
-        "orgpostgresqljdbc424214lex":"orgpostgresqljdbc424214lex/"
+        "mockdatacfc":"modules/mockdatacfc/"
     },
     "devDependencies":{
         "testbox":"^4",

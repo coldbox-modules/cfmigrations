@@ -355,7 +355,7 @@ component singleton accessors="true" {
                     }
                 );
                 return file;
-            } )
+            } );
     }
 
     /**
