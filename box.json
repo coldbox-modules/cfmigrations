@@ -41,7 +41,8 @@
     },
     "devDependencies":{
         "testbox":"^3.2.0+356",
-        "coldbox":"^5.6.2+1148"
+        "coldbox":"^5.6.2+1148",
+        "orgpostgresqljdbc424214lex":"lex:https://ext.lucee.org/org.postgresql.jdbc42-42.1.4.lex"
     },
     "ignore":[
         "**/.*",
