@@ -3,10 +3,10 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
     property name="migrationService" inject="migrationService:default";
     property name="schema" inject="provider:SchemaBuilder@qb";
     property name="qb" inject="provider:QueryBuilder@qb";
-    
+
     function beforeAll() {
-		    super.beforeAll();
-		    variables.migrationService.reset();
+        super.beforeAll();
+        variables.migrationService.reset();
     }
 
     function run() {
