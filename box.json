@@ -37,13 +37,12 @@
     "installPaths":{
         "qb":"modules/qb/",
         "testbox":"testbox/",
-        "coldbox":"tests/resources/app/coldbox/",
-        "orgluceepostgresql830jdbc4lex":"orgluceepostgresql830jdbc4lex/"
+        "coldbox":"tests/resources/app/coldbox/"
     },
     "devDependencies":{
         "testbox":"^3.2.0+356",
         "coldbox":"^5.6.2+1148",
-        "orgluceepostgresql830jdbc4lex":"lex:https://ext.lucee.org/org.lucee.postgresql-8.3.0.jdbc4.lex"
+        "orgpostgresqljdbc424214lex":"lex:https://ext.lucee.org/org.postgresql.jdbc42-42.1.4.lex"
     },
     "ignore":[
         "**/.*",

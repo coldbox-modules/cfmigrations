@@ -5,7 +5,7 @@ component {
             table.increments( "id" );
             table.string( "title" );
             table.text( "body" );
-            table.unsignedInteger( "userId" ).references( "id" ).onTable( "users" );
+            table.unsignedInteger( "userId" );
             table.timestamp( "createdDate" ).default( "CURRENT_TIMESTAMP" );
             table.timestamp( "modifiedDate" ).default( "CURRENT_TIMESTAMP" );
             table.timestamp( "publishedDate" ).nullable();

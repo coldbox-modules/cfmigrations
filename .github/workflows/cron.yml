@@ -1,0 +1,78 @@
+name: Cron
+
+on:
+  schedule:
+    - cron:  0 0 * * 1
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    name: Tests
+    strategy:
+      fail-fast: true
+      matrix:
+        cfengine: ["lucee@5", "lucee@be", "adobe@2018", "adobe@be"]
+        coldbox: ["coldbox@5", "coldbox@6", "coldbox@be"]
+        javaVersion: ["openjdk8", "openjdk11"]
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_USER: cfmigrations_testing
+          POSTGRES_PASSWORD: cfmigrations_testing
+          POSTGRES_DB: cfmigrations_testing
+        ports:
+          - 5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v1.4.3
+        with:
+          java-version: 11 
+
+      - name: Set Up CommandBox
+        uses: elpete/setup-commandbox@v1.0.0
+      
+      - name: Initial Server Start (so lex extensions are picked up)
+        env:
+          DB_HOST: localhost
+          DB_PORT: ${{ job.services.postgres.ports[5432] }}
+          DB_NAME: cfmigrations_testing
+          DB_USER: cfmigrations_testing
+          DB_PASSWORD: cfmigrations_testing
+        run: |
+          box config set modules.commandbox-dotenv.checkEnvPreServerStart=false
+          box server start cfengine=${{ matrix.cfengine }}
+          sleep 30
+      
+      - name: Install dependencies
+        run: |
+          box install
+          box install ${{ matrix.coldbox }} --noSave
+      
+      - name: Restart server (so extensions are picked up)
+        env:
+          DB_HOST: localhost
+          DB_PORT: ${{ job.services.postgres.ports[5432] }}
+          DB_NAME: cfmigrations_testing
+          DB_USER: cfmigrations_testing
+          DB_PASSWORD: cfmigrations_testing
+        run: |
+          box server restart
+          sleep 30
+
+      - name: Run TestBox Tests
+        env:
+          DB_HOST: localhost
+          DB_PORT: ${{ job.services.postgres.ports[5432] }}
+          DB_NAME: cfmigrations_testing
+          DB_USER: cfmigrations_testing
+          DB_PASSWORD: cfmigrations_testing
+        run: box testbox run
