@@ -4,10 +4,10 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
 	property name="schema"           inject="provider:SchemaBuilder@qb";
 	property name="qb"               inject="provider:QueryBuilder@qb";
 
-    function beforeAll() {
-        super.beforeAll();
-        variables.migrationService.reset();
-    }
+	function beforeAll() {
+		super.beforeAll();
+		variables.migrationService.reset();
+	}
 
 	function run() {
 		describe( "cfmigrations", function() {
