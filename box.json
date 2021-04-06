@@ -39,13 +39,12 @@
         "qb":"modules/qb/",
         "testbox":"testbox/",
         "coldbox":"tests/resources/app/coldbox/",
-        "orgluceepostgresql830jdbc4lex":"orgluceepostgresql830jdbc4lex/",
         "mockdatacfc":"modules/mockdatacfc/"
     },
     "devDependencies":{
         "testbox":"^4",
         "coldbox":"^6",
-        "orgluceepostgresql830jdbc4lex":"lex:https://ext.lucee.org/org.lucee.postgresql-8.3.0.jdbc4.lex"
+        "orgpostgresqljdbc424214lex":"lex:https://ext.lucee.org/org.postgresql.jdbc42-42.1.4.lex"
     },
     "ignore":[
         "**/.*",
