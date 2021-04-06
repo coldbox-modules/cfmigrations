@@ -3,7 +3,7 @@ component {
 	function up( schema, query ) {
 		schema.create( "users", function( table ) {
 			table.increments( "id" );
-			table.string( "email" ).unique();
+			table.string( "email" );
 			table.string( "password" );
 			table.timestamp( "createdDate" ).default( "CURRENT_TIMESTAMP" );
 		} );
