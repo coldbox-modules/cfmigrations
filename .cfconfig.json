@@ -26,7 +26,7 @@
             "password":"${DB_PASSWORD}",
             "port":"${DB_PORT}",
             "username":"${DB_USER}",
-            "bundleName": "org.postgresql.jdbc",
+            "bundleName": "org.postgresql.jdbc42",
             "bundleVersion": "42.1.4"
         }
     },
