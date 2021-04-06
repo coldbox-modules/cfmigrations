@@ -41,8 +41,7 @@
     },
     "devDependencies":{
         "testbox":"^3.2.0+356",
-        "coldbox":"^5.6.2+1148",
-        "orgluceepostgresql830jdbc4lex":"lex:https://ext.lucee.org/org.lucee.postgresql-8.3.0.jdbc4.lex"
+        "coldbox":"^5.6.2+1148"
     },
     "ignore":[
         "**/.*",
