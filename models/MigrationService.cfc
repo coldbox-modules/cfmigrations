@@ -33,6 +33,8 @@ component accessors="true" {
             } )
             .each( function( key ) {
                 if ( isSimpleValue( args[ key ] ) ) {
+                    // For some reason Lucee only picks up the `invoke` and ACF only picks up the scope assignment.
+                    invoke( this, "set" & key, { "#key#" = args[ key ] } );
                     variables[ key ] = args[ key ];
                 } else if ( key == "properties" ) {
                     variables.managerProperties = args[ key ];
