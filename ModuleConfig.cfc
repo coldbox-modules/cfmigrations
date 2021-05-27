@@ -12,7 +12,7 @@ component {
             "managers": {
                 "default": {
                     "manager": "cfmigrations.models.QBMigrationManager",
-                    "properties": { "defaultGrammar": "BaseGrammar" }
+                    "properties": { "defaultGrammar": "AutoDiscover@qb" }
                 }
             }
         };

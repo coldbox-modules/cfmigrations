@@ -1,4 +1,4 @@
-component singleton accessors="true" {
+component accessors="true" {
 
     property name="wirebox" inject="wirebox";
     property name="environment" inject="coldbox:setting:environment" default="development";
@@ -19,11 +19,11 @@ component singleton accessors="true" {
      * @properties
      */
     MigrationService function init(
-        any manager,
-        string migrationsDirectory,
-        string seedsDirectory,
-        any seedEnvironments,
-        struct properties
+        any manager = "cfmigrations.models.QBMigrationManager",
+        string migrationsDirectory = "/resources/database/migrations",
+        string seedsDirectory = "/resources/database/seeds",
+        any seedEnvironments = [ "development" ],
+        struct properties = {}
     ) {
         variables.managerProperties = {};
         var args = arguments;
@@ -33,7 +33,7 @@ component singleton accessors="true" {
             } )
             .each( function( key ) {
                 if ( isSimpleValue( args[ key ] ) ) {
-                    variables[ key ] = args[ key ];
+                    invoke( this, "set" & key, { key: args[ key ] } );
                 } else if ( key == "properties" ) {
                     variables.managerProperties = args[ key ];
                 }
@@ -47,10 +47,12 @@ component singleton accessors="true" {
     }
 
     function onDIComplete() {
-        variables.manager = variables.wirebox.getInstance(
-            name = variables.manager,
-            initArguments = variables.managerProperties
-        );
+        if ( isSimpleValue( variables.manager ) ) {
+            variables.manager = variables.wirebox.getInstance(
+                name = variables.manager,
+                initArguments = variables.managerProperties
+            );
+        }
     }
 
     /**

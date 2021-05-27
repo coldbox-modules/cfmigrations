@@ -41,7 +41,27 @@
 
 		moduleSettings = {
 			"quick" : { "defaultGrammar" : "PostgresGrammar@qb" },
-			"qb"    : { "defaultGrammar" : "PostgresGrammar@qb" }
+			"qb"    : { "defaultGrammar" : "PostgresGrammar@qb" },
+            "cfmigrations": {
+                "managers": {
+                    "default": {
+                        "manager": "cfmigrations.models.QBMigrationManager",
+                        "migrationsDirectory": "/resources/database/migrations",
+                        "seedsDirectory": "/resources/database/seeds",
+                        "properties": {}
+                    },
+                    "db1": {
+                        "manager": "cfmigrations.models.QBMigrationManager",
+                        "migrationsDirectory": "/resources/database/db1/migrations",
+                        "seedsDirectory": "/resources/database/db1/seeds",
+                        "properties": {
+                            "defaultGrammar": "MySQLGrammar@qb",
+                            "datasource": "db1",
+                            "useTransactions": "false",    
+                        }
+                    }
+                }
+            }
 		};
 
 		// custom settings

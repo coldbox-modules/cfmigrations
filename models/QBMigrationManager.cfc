@@ -8,6 +8,15 @@ component accessors="true" {
     property name="schema";
     property name="useTransactions" default="true";
 
+    public QBMigrationManager function init() {
+        for ( var key in arguments ) {
+            if ( !isNull( arguments[ key ] ) ) {
+                variables[ key ] = arguments[ key ];
+            }
+        }
+        return this;
+    }
+
     boolean function isReady() {
         return isMigrationTableInstalled();
     }
