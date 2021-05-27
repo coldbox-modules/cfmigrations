@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Tests
     strategy:
-      fail-fast: true
       matrix:
         cfengine: ["lucee@5", "lucee@be", "adobe@2018", "adobe@be"]
         coldbox: ["coldbox@5", "coldbox@6", "coldbox@be"]

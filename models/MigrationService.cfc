@@ -33,7 +33,7 @@ component accessors="true" {
             } )
             .each( function( key ) {
                 if ( isSimpleValue( args[ key ] ) ) {
-                    invoke( this, "set" & key, { key: args[ key ] } );
+                    variables[ key ] = args[ key ];
                 } else if ( key == "properties" ) {
                     variables.managerProperties = args[ key ];
                 }

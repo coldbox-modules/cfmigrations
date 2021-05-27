@@ -57,7 +57,7 @@
                         "properties": {
                             "defaultGrammar": "MySQLGrammar@qb",
                             "datasource": "db1",
-                            "useTransactions": "false",    
+                            "useTransactions": "false"
                         }
                     }
                 }
