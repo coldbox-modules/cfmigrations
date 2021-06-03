@@ -136,9 +136,15 @@ component accessors="true" {
 
         var migration = wirebox.getInstance( migrationStruct.componentPath );
 
-        var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) ).setDefaultOptions( { datasource: getDatasource() } );
+        var schema = wirebox
+            .getInstance( "SchemaBuilder@qb" )
+            .setGrammar( wirebox.getInstance( defaultGrammar ) )
+            .setDefaultOptions( { datasource: getDatasource() } );
 
-        var query = wirebox.getInstance( "QueryBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) ).setDefaultOptions( { datasource: getDatasource() } );
+        var query = wirebox
+            .getInstance( "QueryBuilder@qb" )
+            .setGrammar( wirebox.getInstance( defaultGrammar ) )
+            .setDefaultOptions( { datasource: getDatasource() } );
 
         preProcessHook( migrationStruct );
 
