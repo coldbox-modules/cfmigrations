@@ -66,6 +66,7 @@ component accessors="true" {
     array function findProcessed() {
         return wirebox
             .getInstance( "QueryBuilder@qb" )
+            .setGrammar( wirebox.getInstance( defaultGrammar ) )
             .from( getMigrationsTable() )
             .setReturnFormat( "array" )
             .get( [ "name" ], { "datasource": getDatasource() } )
