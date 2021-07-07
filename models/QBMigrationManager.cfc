@@ -64,15 +64,15 @@ component accessors="true" {
      * Finds all processed migrations
      */
     array function findProcessed() {
-        return wirebox
-            .getInstance( "QueryBuilder@qb" )
-            .setGrammar( wirebox.getInstance( defaultGrammar ) )
-            .from( getMigrationsTable() )
-            .setReturnFormat( "array" )
-            .get( [ "name" ], { "datasource": getDatasource() } )
-            .map( function( row ) {
-                return row.name;
-            } );
+        if ( !structKeyExists( variables, "processed" ) || isNull( variables.processed ) ) {
+            variables.processed = variables.wirebox
+                .getInstance( "QueryBuilder@qb" )
+                .setGrammar( wirebox.getInstance( defaultGrammar ) )
+                .from( getMigrationsTable() )
+                .setReturnFormat( "array" )
+                .values( "name", { "datasource": getDatasource() } );
+        }
+        return variables.processed;
     }
 
 
@@ -99,12 +99,14 @@ component accessors="true" {
                 { name: componentName, time: { value: now(), cfsqltype: "CF_SQL_TIMESTAMP" } },
                 { datasource: getDatasource() }
             );
+            structDelete( variables, "processed" );
         } else {
             queryExecute(
                 "DELETE FROM #getMigrationsTable()# WHERE name = :name",
                 { name: componentName },
                 { datasource: getDatasource() }
             );
+            structDelete( variables, "processed" );
         }
     }
 
