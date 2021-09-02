@@ -92,7 +92,7 @@ component accessors="true" {
      * @direction  Whether to log it as up or down
      * @componentName The component name to log
      */
-    private void function logMigration( direction, componentName ) {
+    public void function logMigration( direction, componentName ) {
         if ( direction == "up" ) {
             queryExecute(
                 "INSERT INTO #getMigrationsTable()# VALUES ( :name, :time )",
