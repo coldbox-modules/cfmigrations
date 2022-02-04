@@ -1,7 +1,8 @@
 component accessors="true" {
 
     property name="wirebox" inject="wirebox";
-    property name="environment" inject="coldbox:setting:environment" default="development";
+    property name="configSettings" inject="box:configSettings";
+    property name="environment" default="development";
     property name="manager" default="cfmigrations.models.QBMigrationManager";
     property name="migrationsDirectory" default="/resources/database/migrations";
     property name="seedsDirectory" default="/resources/database/seeds";
@@ -55,6 +56,16 @@ component accessors="true" {
                 initArguments = variables.managerProperties
             );
         }
+        if ( variables.configSettings.keyExists( "environment" ) ) {
+            variables.environment = variables.configSettings.environment;
+        }
+    }
+
+    /**
+     * Passes through to the manager's isReady method.
+     */
+    public boolean function isReady() {
+        return variables.manager.isReady();
     }
 
     /**
