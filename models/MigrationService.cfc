@@ -4,8 +4,8 @@ component accessors="true" {
     property name="configSettings" inject="box:configSettings";
     property name="environment" default="development";
     property name="manager" default="cfmigrations.models.QBMigrationManager";
-    property name="migrationsDirectory" default="/resources/database/migrations";
-    property name="seedsDirectory" default="/resources/database/seeds";
+    property name="migrationsDirectory" default="resources/database/migrations/";
+    property name="seedsDirectory" default="resources/database/seeds/";
     property name="seedEnvironments" default="development";
     property name="managerProperties";
 
@@ -156,7 +156,11 @@ component accessors="true" {
      *
      * @seedName string when provided, only this seed will be run
      */
-    public MigrationService function seed( string seedName ) {
+    public MigrationService function seed(
+        string seedName,
+        function postProcessHook = variables.noop,
+        function preProcessHook = variables.noop
+    ) {
         if (
             !isNull( variables.environment ) && !arrayContainsNoCase(
                 variables.seedEnvironments,
@@ -171,7 +175,11 @@ component accessors="true" {
         if ( !directoryExists( expandPath( variables.seedsDirectory ) ) ) return this;
 
         findSeeds( argumentCollection = arguments ).each( function( file ) {
-            variables.manager.runSeed( file.componentPath );
+            variables.manager.runSeed(
+                file.componentPath,
+                postProcessHook,
+                preProcessHook
+            );
         } );
 
         return this;

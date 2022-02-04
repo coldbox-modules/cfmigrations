@@ -171,12 +171,18 @@ component accessors="true" {
      *
      * @invocationPath the component invocation path for the seed
      */
-    public void function runSeed( required string invocationPath ) {
+    public void function runSeed(
+        required string invocationPath,
+        function postProcessHook = variables.noop,
+        function preProcessHook = variables.noop
+    ) {
+        arguments.preProcessHook( invocationPath );
         var seeder = wirebox.getInstance( arguments.invocationPath );
         var query = wirebox.getInstance( "QueryBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) );
         $transactioned( function() {
             invoke( seeder, "run", [ query, variables.mockData ] );
         } );
+        arguments.postProcessHook( invocationPath );
     }
 
 
