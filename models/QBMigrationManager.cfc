@@ -182,7 +182,7 @@ component accessors="true" {
         var query = wirebox
             .getInstance( "QueryBuilder@qb" )
             .setGrammar( wirebox.getInstance( defaultGrammar ) )
-            .setDefaultOptions( { datasource: getDatasource() } );;
+            .setDefaultOptions( { datasource: getDatasource() } );
         
         $transactioned( function() {
             invoke( seeder, "run", [ query, variables.mockData ] );
