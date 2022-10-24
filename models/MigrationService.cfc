@@ -175,11 +175,7 @@ component accessors="true" {
         if ( !directoryExists( expandPath( variables.seedsDirectory ) ) ) return this;
 
         findSeeds( argumentCollection = arguments ).each( function( file ) {
-            variables.manager.runSeed(
-                file.componentPath,
-                postProcessHook,
-                preProcessHook
-            );
+            variables.manager.runSeed( file.componentPath, postProcessHook, preProcessHook );
         } );
 
         return this;
