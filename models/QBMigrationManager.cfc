@@ -178,7 +178,12 @@ component accessors="true" {
     ) {
         arguments.preProcessHook( invocationPath );
         var seeder = wirebox.getInstance( arguments.invocationPath );
-        var query = wirebox.getInstance( "QueryBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) );
+
+        var query = wirebox
+            .getInstance( "QueryBuilder@qb" )
+            .setGrammar( wirebox.getInstance( defaultGrammar ) )
+            .setDefaultOptions( { datasource: getDatasource() } );
+
         $transactioned( function() {
             invoke( seeder, "run", [ query, variables.mockData ] );
         } );
