@@ -63,7 +63,7 @@ moduleSettings = {
                 // The directory containing any seeds, if applicable
                 "seedsDirectory" : "/resources/database/seeds",
                 // A comma-delimited list of environments which are allowed to run seeds
-                "seedEnvironments" : "development"
+                "seedEnvironments" : "development",
                 "properties" : {
                     "defaultGrammar" : "BaseGrammar@qb"
                 }
