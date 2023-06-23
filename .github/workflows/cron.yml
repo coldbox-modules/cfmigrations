@@ -10,8 +10,8 @@ jobs:
     name: Tests
     strategy:
       matrix:
-        cfengine: ["lucee@5", "lucee@be", "adobe@2018", "adobe@be"]
-        coldbox: ["coldbox@6", "coldbox@be"]
+        cfengine: ["lucee@5", "lucee@be", "adobe@2018", "adobe@2021", "adobe@2023", "adobe@be"]
+        coldbox: ["coldbox@6", "coldbox@7", "coldbox@be"]
         javaVersion: ["openjdk8", "openjdk11"]
     services:
       postgres:
@@ -34,11 +34,11 @@ jobs:
       - name: Setup Java JDK
         uses: actions/setup-java@v1.4.3
         with:
-          java-version: 11 
+          java-version: 11
 
       - name: Set Up CommandBox
         uses: elpete/setup-commandbox@v1.0.0
-      
+
       - name: Initial Server Start (so lex extensions are picked up)
         env:
           DB_HOST: localhost
@@ -50,12 +50,12 @@ jobs:
           box config set modules.commandbox-dotenv.checkEnvPreServerStart=false
           box server start cfengine=${{ matrix.cfengine }}
           sleep 30
-      
+
       - name: Install dependencies
         run: |
           box install
           box install ${{ matrix.coldbox }} --noSave
-      
+
       - name: Restart server (so extensions are picked up)
         env:
           DB_HOST: localhost
