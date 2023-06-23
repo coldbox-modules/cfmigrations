@@ -121,7 +121,8 @@ component accessors="true" {
         required string direction,
         required struct migrationStruct,
         function postProcessHook = variables.noop,
-        function preProcessHook = variables.noop
+        function preProcessHook = variables.noop,
+        boolean pretend = false
     ) {
         install();
 
@@ -140,21 +141,28 @@ component accessors="true" {
         var schema = wirebox
             .getInstance( "SchemaBuilder@qb" )
             .setGrammar( wirebox.getInstance( defaultGrammar ) )
-            .setDefaultOptions( { datasource: getDatasource() } );
+            .setDefaultOptions( { datasource: getDatasource() } )
 
         var query = wirebox
             .getInstance( "QueryBuilder@qb" )
             .setGrammar( wirebox.getInstance( defaultGrammar ) )
-            .setDefaultOptions( { datasource: getDatasource() } );
+            .setDefaultOptions( { datasource: getDatasource() } )
+
+        if ( arguments.pretend ) {
+            schema.pretend();
+            query.pretend();
+        }
 
         preProcessHook( migrationStruct );
 
         $transactioned( function() {
             invoke( migration, direction, [ schema, query ] );
-            logMigration( direction, migrationStruct.componentName );
+            if ( !pretend ) {
+                logMigration( direction, migrationStruct.componentName );
+            }
         } );
 
-        postProcessHook( migrationStruct );
+        postProcessHook( migrationStruct, schema, query );
     }
 
     /**

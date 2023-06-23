@@ -193,7 +193,8 @@ component accessors="true" {
     public struct function runNextMigration(
         required string direction,
         function postProcessHook = variables.noop,
-        function preProcessHook = variables.noop
+        function preProcessHook = variables.noop,
+        boolean pretend = false
     ) {
         install();
 
@@ -206,7 +207,8 @@ component accessors="true" {
                     arguments.direction,
                     migration,
                     postProcessHook,
-                    preProcessHook
+                    preProcessHook,
+                    arguments.pretend
                 );
                 return migration;
             }
@@ -227,7 +229,8 @@ component accessors="true" {
     public void function runAllMigrations(
         required string direction,
         function postProcessHook = variables.noop,
-        function preProcessHook = variables.noop
+        function preProcessHook = variables.noop,
+        boolean pretend = false
     ) {
         install();
 
@@ -248,7 +251,8 @@ component accessors="true" {
                 direction,
                 migration,
                 postProcessHook,
-                preProcessHook
+                preProcessHook,
+                pretend
             );
         } );
     }
@@ -402,7 +406,8 @@ component accessors="true" {
         required string direction,
         required struct migrationStruct,
         function postProcessHook = variables.noop,
-        function preProcessHook = variables.noop
+        function preProcessHook = variables.noop,
+        boolean pretend = false
     ) {
         install();
 
