@@ -5,7 +5,7 @@ component accessors="true" {
     property name="defaultGrammar" default="AutoDiscover@qb";
     property name="datasource";
     property name="migrationsTable" default="cfmigrations";
-    property name="schema";
+    property name="schema" default="";
     property name="useTransactions" default="true";
 
     public QBMigrationManager function init() {

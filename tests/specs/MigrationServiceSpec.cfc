@@ -10,7 +10,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                 expect( manager.getDefaultGrammar() ).toBe( "AutoDiscover@qb" );
                 expect( manager.getDatasource() ).toBeNull();
                 expect( manager.getMigrationsTable() ).toBe( "cfmigrations" );
-                expect( manager.getSchema() ).toBeNull();
+                expect( manager.getSchema() ).toBe( "" );
                 expect( manager.getUseTransactions() ).toBeTrue();
             } );
 
