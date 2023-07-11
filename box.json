@@ -32,7 +32,7 @@
         }
     ],
     "dependencies":{
-        "qb":"^9.0.0",
+        "qb":"^9.4.0",
         "mockdatacfc":"^3.4.0+35"
     },
     "installPaths":{

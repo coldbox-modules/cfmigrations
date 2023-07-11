@@ -29,7 +29,7 @@ component accessors="true" {
             return;
         }
 
-        var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) );
+        var schema = newSchemaBuilder();
 
         schema.create(
             getMigrationsTable(),
@@ -56,7 +56,7 @@ component accessors="true" {
      * Resets the database to an empty state
      */
     public void function reset() {
-        var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) );
+        var schema = newSchemaBuilder();
         schema.dropAllObjects( options = { datasource: getDatasource() }, schema = getSchema() );
     }
 
@@ -138,10 +138,7 @@ component accessors="true" {
 
         var migration = wirebox.getInstance( migrationStruct.componentPath );
 
-        var schema = wirebox
-            .getInstance( "SchemaBuilder@qb" )
-            .setGrammar( wirebox.getInstance( defaultGrammar ) )
-            .setDefaultOptions( { datasource: getDatasource() } )
+        var schema = newSchemaBuilder();
 
         var query = wirebox
             .getInstance( "QueryBuilder@qb" )
@@ -169,8 +166,7 @@ component accessors="true" {
      * Determines whether the migration table is installed
      */
     public boolean function isMigrationTableInstalled() {
-        var schema = wirebox.getInstance( "SchemaBuilder@qb" ).setGrammar( wirebox.getInstance( defaultGrammar ) );
-
+        var schema = newSchemaBuilder();
         return schema.hasTable( getMigrationsTable(), getSchema(), { datasource: getDatasource() } );
     }
 
@@ -221,6 +217,14 @@ component accessors="true" {
 
     private void function noop() {
         return; // intentionally does nothing
+    }
+
+    private SchemaBuilder function newSchemaBuilder() {
+        return variables.wirebox
+            .getInstance( "SchemaBuilder@qb" )
+            .setGrammar( variables.wirebox.getInstance( getDefaultGrammar() ) )
+            .setDefaultSchema( getSchema() )
+            .setDefaultOptions( { datasource: getDatasource() } );
     }
 
 }
