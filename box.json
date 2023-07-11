@@ -22,7 +22,8 @@
     ],
     "scripts":{
         "format":"cfformat run models/**/*.cfc,dsl/**/*.cfc,tests/specs/**/*.cfc,ModuleConfig.cfc --overwrite",
-        "format:check":"cfformat check models/**/*.cfc,dsl/**/*.cfc,tests/specs/**/*.cfc,ModuleConfig.cfc --verbose"
+        "format:check":"cfformat check models/**/*.cfc,dsl/**/*.cfc,tests/specs/**/*.cfc,ModuleConfig.cfc --verbose",
+        "install:cfpm": "cfpm install postgresql"
     },
     "private":false,
     "license":[

@@ -59,6 +59,11 @@ jobs:
           box server start cfengine=${{ matrix.cfengine }}
           sleep 30
 
+      - name: CFPM
+        if: ${{ matrix.cfengine == 'adobe@2021' || matrix.cfengine == 'adobe@2023' }}
+        run: |
+          box run-script install:cfpm
+
       - name: Install dependencies
         run: |
           box install --verbose
