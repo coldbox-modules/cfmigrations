@@ -33,7 +33,7 @@
         }
     ],
     "dependencies":{
-        "qb":"^9.4.0",
+        "qb":"^10.0.0",
         "mockdatacfc":"^3.4.0+35"
     },
     "installPaths":{
@@ -44,8 +44,8 @@
         "orgpostgresqljdbc424214lex":"orgpostgresqljdbc424214lex/"
     },
     "devDependencies":{
-        "testbox":"^4",
-        "coldbox":"^6",
+        "testbox":"^6",
+        "coldbox":"^7",
         "orgpostgresqljdbc424214lex":"lex:https://ext.lucee.org/org.postgresql.jdbc42-42.1.4.lex"
     },
     "ignore":[
