@@ -1,3 +1,12 @@
+# v4.1.3
+## 28 Oct 2024 — 19:09:56 UTC
+
+### other
+
++ __\*:__ chore: Dependency updates to qb 10
+ ([7b231d0](https://github.com/coldbox-modules/cfmigrations/commit/7b231d0e5a74aee65b8cc3b43e2e3ec6ac7530a8))
+
+
 # v2.0.9
 ## 27 Jul 2020 — 20:00:48 UTC
 
