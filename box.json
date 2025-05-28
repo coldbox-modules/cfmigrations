@@ -33,8 +33,8 @@
         }
     ],
     "dependencies":{
-        "qb":"^10.0.0",
-        "mockdatacfc":"^3.4.0+35"
+        "qb":"^12.0.0",
+        "cbMockData":"^4.1.0"
     },
     "installPaths":{
         "qb":"modules/qb/",
