@@ -1,3 +1,11 @@
+# v5.0.0
+## 28 May 2025 — 18:09:40 UTC
+
+### BREAKING
+
++ __\*:__ chore: Update to latest qb and cbMockData (#42) ([aaf93ad](https://github.com/coldbox-modules/cfmigrations/commit/aaf93adbaf3344d6962594a3077f511738def3f1))
+
+
 # v4.1.3
 ## 28 Oct 2024 — 19:09:56 UTC
 
