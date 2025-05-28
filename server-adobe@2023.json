@@ -13,10 +13,13 @@
         }
     },
     "jvm":{
-        "heapSize":"1024"
+        "heapSize":"1024",
+        "args": [
+            "-Dcoldfusion.runtime.remotemethod.matchArguments=false"
+        ]
     },
     "openBrowser":"false",
     "scripts" : {
-        "onServerInstall":"cfpm install zip,debugger"
+        "onServerInstall":"cfpm install zip,debugger,postgresql"
     }
 }

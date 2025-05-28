@@ -14,12 +14,12 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        cfengine: ["lucee@5", "lucee@6", "adobe@2021", "adobe@2023", "adobe@2025", "boxlang@1", "boxlang-cfml@1"]
+        cfengine: ["lucee@5", "lucee@6", "adobe@2021", "adobe@2023", "adobe@2025", "boxlang-cfml@1"]
         experimental: [false]
         coldbox: ["coldbox@6", "coldbox@7"]
     services:
       postgres:
-        image: postgres:17
+        image: postgres:12
         env:
           POSTGRES_USER: cfmigrations_testing
           POSTGRES_PASSWORD: cfmigrations_testing
