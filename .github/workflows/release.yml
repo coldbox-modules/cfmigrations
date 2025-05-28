@@ -14,7 +14,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        cfengine: ["lucee@5", "adobe@2018", "adobe@2021", "adobe@2023"]
+        cfengine: ["lucee@5", "lucee@6", "adobe@2021", "adobe@2023", "adobe@2025", "boxlang-cfml@1"]
+        experimental: [false]
         coldbox: ["coldbox@6", "coldbox@7"]
     services:
       postgres:
@@ -34,13 +35,20 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Setup Java JDK
-        uses: actions/setup-java@v1.4.3
-        with:
-          java-version: 11
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      - name: Set Up CommandBox
-        uses: elpete/setup-commandbox@v1.0.0
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 21
+
+      - name: Setup CommandBox CLI
+        uses: Ortus-Solutions/setup-commandbox@v2.0.1
+        with:
+          installSystemModules: true
+          install: commandbox-boxlang
 
       - name: Initial Server Start (so lex extensions are picked up)
         env:
@@ -51,13 +59,8 @@ jobs:
           DB_PASSWORD: cfmigrations_testing
         run: |
           box config set modules.commandbox-dotenv.checkEnvPreServerStart=false
-          box server start cfengine=${{ matrix.cfengine }}
+          box server start serverConfigFile="server-${{ matrix.cfengine }}.json" --noSaveSettings --debug
           sleep 30
-
-      - name: CFPM
-        if: ${{ matrix.cfengine == 'adobe@2021' || matrix.cfengine == 'adobe@2023' }}
-        run: |
-          box run-script install:cfpm
 
       - name: Install dependencies
         run: |
@@ -72,7 +75,7 @@ jobs:
           DB_USER: cfmigrations_testing
           DB_PASSWORD: cfmigrations_testing
         run: |
-          box server restart
+          box server restart serverConfigFile="server-${{ matrix.cfengine }}.json" --debug
           sleep 30
 
       - name: Run TestBox Tests

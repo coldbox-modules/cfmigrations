@@ -1,7 +1,7 @@
 component accessors="true" {
 
     property name="wirebox" inject="wirebox";
-    property name="mockData" inject="MockData@mockdatacfc";
+    property name="mockData" inject="MockData@cbMockData";
     property name="defaultGrammar" default="AutoDiscover@qb";
     property name="datasource";
     property name="migrationsTable" default="cfmigrations";
