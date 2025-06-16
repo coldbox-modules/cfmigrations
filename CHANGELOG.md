@@ -1,3 +1,12 @@
+# v5.1.0
+## 16 Jun 2025 — 22:14:31 UTC
+
+### feat
+
++ __box.json:__ Upgrade qb to 13.0.1
+ ([caddc22](https://github.com/coldbox-modules/cfmigrations/commit/caddc2268ff19d1ec31ddcd13fbfe25c347cd861))
+
+
 # v5.0.0
 ## 28 May 2025 — 18:09:40 UTC
 

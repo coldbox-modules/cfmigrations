@@ -1,6 +1,6 @@
 {
     "name":"CFMigrations",
-    "version":"5.0.0",
+    "version":"5.1.0",
     "location":"forgeboxStorage",
     "author":"Eric Peterson",
     "homepage":"https://github.com/coldbox-modules/cfmigrations",
