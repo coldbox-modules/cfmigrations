@@ -33,7 +33,7 @@
         }
     ],
     "dependencies":{
-        "qb":"^12.0.0",
+        "qb":"^13.0.1",
         "cbMockData":"^4.1.0"
     },
     "installPaths":{
