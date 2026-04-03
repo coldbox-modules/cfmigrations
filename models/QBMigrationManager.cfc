@@ -178,7 +178,8 @@ component accessors="true" {
     public void function runSeed(
         required string invocationPath,
         function postProcessHook = variables.noop,
-        function preProcessHook = variables.noop
+        function preProcessHook = variables.noop,
+        boolean pretend = false
     ) {
         arguments.preProcessHook( invocationPath );
         var seeder = wirebox.getInstance( arguments.invocationPath );
@@ -188,10 +189,14 @@ component accessors="true" {
             .setGrammar( wirebox.getInstance( defaultGrammar ) )
             .setDefaultOptions( { datasource: getDatasource() } );
 
+        if ( arguments.pretend ) {
+            query.pretend();
+        }
+
         $transactioned( function() {
             invoke( seeder, "run", [ query, variables.mockData ] );
         } );
-        arguments.postProcessHook( invocationPath );
+        arguments.postProcessHook( invocationPath, query );
     }
 
 
