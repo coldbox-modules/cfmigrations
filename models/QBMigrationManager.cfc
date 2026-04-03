@@ -160,11 +160,7 @@ component accessors="true" {
              * built-in functions when resolving unscoped calls inside a
              * component method.
              */
-            migration[ "queryExecute" ] = function(
-                required string sql,
-                struct params  = {},
-                struct options = {}
-            ) {
+            migration[ "queryExecute" ] = function( required string sql, struct params = {}, struct options = {} ) {
                 queryExecuteLog.append( sql );
             };
         }
@@ -178,7 +174,12 @@ component accessors="true" {
             }
         } );
 
-        postProcessHook( migrationStruct, schema, query, queryExecuteLog );
+        postProcessHook(
+            migrationStruct,
+            schema,
+            query,
+            queryExecuteLog
+        );
     }
 
     /**
