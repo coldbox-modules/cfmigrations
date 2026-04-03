@@ -59,6 +59,11 @@ interface {
      *
      * @invocationPath the component invocation path for the seed
      */
-    public void function runSeed( required string invocationPath, function postProcessHook, function preProcessHook, boolean pretend );
+    public void function runSeed(
+        required string invocationPath,
+        function postProcessHook,
+        function preProcessHook,
+        boolean pretend
+    );
 
 }
