@@ -41,8 +41,13 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                  *      postProcessHook( migrationStruct, schema, query, queryExecuteLog )
                  */
                 variables.migrationService.up(
-                    pretend         = true,
-                    postProcessHook = function( migrationStruct, schema, query, queryExecuteLog = [] ) {
+                    pretend = true,
+                    postProcessHook = function(
+                        migrationStruct,
+                        schema,
+                        query,
+                        queryExecuteLog = []
+                    ) {
                         capturedQueryExecuteLog.append( queryExecuteLog, true );
                     }
                 );
@@ -55,12 +60,9 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                 // The migration should NOT be logged in cfmigrations when pretending.
                 expect(
                     qb.setDefaultOptions( { datasource: "cfmigrations_testing" } )
-                      .from( "cfmigrations" )
-                      .count()
-                ).toBe(
-                    0,
-                    "No migration should be recorded in the cfmigrations table when pretending"
-                );
+                        .from( "cfmigrations" )
+                        .count()
+                ).toBe( 0, "No migration should be recorded in the cfmigrations table when pretending" );
 
                 // At least one SQL statement must have been captured from the raw
                 // queryExecute calls in the migration's up() method.
@@ -74,7 +76,6 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                     "The captured SQL should contain the CREATE TABLE statement from the migration"
                 );
             } );
-
         } );
     }
 
