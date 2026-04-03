@@ -145,9 +145,28 @@ component accessors="true" {
             .setGrammar( wirebox.getInstance( defaultGrammar ) )
             .setDefaultOptions( { datasource: getDatasource() } )
 
+        var queryExecuteLog = [];
+
         if ( arguments.pretend ) {
             schema.pretend();
             query.pretend();
+
+            /*
+             * Inject a queryExecute shim into the migration CFC so that any
+             * raw queryExecute() calls inside up()/down() are intercepted
+             * instead of executed.  In Lucee (and BoxLang), assigning a
+             * function to a key on the component struct makes it available
+             * in the component's this-scope, which is checked before
+             * built-in functions when resolving unscoped calls inside a
+             * component method.
+             */
+            migration[ "queryExecute" ] = function(
+                required string sql,
+                struct params  = {},
+                struct options = {}
+            ) {
+                queryExecuteLog.append( sql );
+            };
         }
 
         preProcessHook( migrationStruct );
@@ -159,7 +178,7 @@ component accessors="true" {
             }
         } );
 
-        postProcessHook( migrationStruct, schema, query );
+        postProcessHook( migrationStruct, schema, query, queryExecuteLog );
     }
 
     /**
