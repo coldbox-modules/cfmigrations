@@ -159,7 +159,8 @@ component accessors="true" {
     public MigrationService function seed(
         string seedName,
         function postProcessHook = variables.noop,
-        function preProcessHook = variables.noop
+        function preProcessHook = variables.noop,
+        boolean pretend = false
     ) {
         if (
             !isNull( variables.environment ) && !arrayContainsNoCase(
@@ -175,7 +176,7 @@ component accessors="true" {
         if ( !directoryExists( expandPath( variables.seedsDirectory ) ) ) return this;
 
         findSeeds( argumentCollection = arguments ).each( function( file ) {
-            variables.manager.runSeed( file.componentPath, postProcessHook, preProcessHook );
+            variables.manager.runSeed( file.componentPath, postProcessHook, preProcessHook, pretend );
         } );
 
         return this;
