@@ -30,6 +30,8 @@ component {
 }
 ```
 
+> **Warning:** The `pretend` feature only works with `qb`'s `SchemaBuilder` and `QueryBuilder`. It does **not** work with `queryExecute` or any other method of executing SQL. If your migration uses `queryExecute`, the `pretend` flag will have no effect and the SQL will be executed normally.
+
 The name of this file could be something like `2017_09_03_043150_create_users_table.cfc`. The first 17 characters of this file represent the timestamp of the migration and need to be in this format: `YYYY_MM_DD_HHMISS`. The reason for this is so `cfmigrations` can run the migrations in the correct order. You may have migrations that add columns to a table, so you need to make sure the table exists first. In this case, just make sure the timestamp for adding the new column comes after the timestamp for creating the table, like so:
 
 ```
