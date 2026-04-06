@@ -1,3 +1,12 @@
+# v5.1.1
+## 06 Apr 2026 — 19:58:21 UTC
+
+### other
+
++ __\*:__ docs: warn that pretend only works with qb, not queryExecute ([26eb9f1](https://github.com/coldbox-modules/cfmigrations/commit/26eb9f17d26491fc65aacc114a9ee3bb56e82da1))
++ __\*:__ feat: add pretend support to runSeed ([880d0fa](https://github.com/coldbox-modules/cfmigrations/commit/880d0fae21795ac70dde2b2e12c2df3f00d8abb7))
+
+
 # v5.1.0
 ## 16 Jun 2025 — 22:14:31 UTC
 
