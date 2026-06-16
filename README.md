@@ -1,4 +1,4 @@
-# cfmigrations
+# cbMigrations
 
 ## Keep track and run your database migrations with CFML.
 
@@ -32,7 +32,7 @@ component {
 
 > **Warning:** The `pretend` feature only works with `qb`'s `SchemaBuilder` and `QueryBuilder`. It does **not** work with `queryExecute` or any other method of executing SQL. If your migration uses `queryExecute`, the `pretend` flag will have no effect and the SQL will be executed normally.
 
-The name of this file could be something like `2017_09_03_043150_create_users_table.cfc`. The first 17 characters of this file represent the timestamp of the migration and need to be in this format: `YYYY_MM_DD_HHMISS`. The reason for this is so `cfmigrations` can run the migrations in the correct order. You may have migrations that add columns to a table, so you need to make sure the table exists first. In this case, just make sure the timestamp for adding the new column comes after the timestamp for creating the table, like so:
+The name of this file could be something like `2017_09_03_043150_create_users_table.cfc`. The first 17 characters of this file represent the timestamp of the migration and need to be in this format: `YYYY_MM_DD_HHMISS`. The reason for this is so `cbMigrations` can run the migrations in the correct order. You may have migrations that add columns to a table, so you need to make sure the table exists first. In this case, just make sure the timestamp for adding the new column comes after the timestamp for creating the table, like so:
 
 ```
 2017_09_03_043150_create_users_table.cfc
@@ -43,23 +43,23 @@ An easy way to generate these files is to use `commandbox-migrations` and the `m
 
 ### Installation and Uninstallation
 
-In order to track which migrations have been ran, `cfmigrations` needs to install a tracking mechanism.  For database migrations this creates a table in your database called `cfmigrations` by default. You can do this by calling the `install()` method or by running the `migrate install` command from `commandbox-migrations`.
+In order to track which migrations have been ran, `cbMigrations` needs to install a tracking mechanism.  For database migrations this creates a table in your database called `cbmigrations` by default. You can do this by calling the `install()` method or by running the `migrate install` command from `commandbox-migrations`.
 
 If you find a need to, you can uninstall the migrations tracker by calling the `uninstall()` method or by running `migrate uninstall` from `commandbox-migrations`. Running this method will rollback all ran migrations before removing the migrations tracker.
 
 ### Configuration
 
-The module is configured by default with a single migration service that interact with your database, optionally using qb. Multiple migration services with different managers may also be configured.  The default manager for the cfmigrations is `QBMigrationManager`, but you may use others, such as those included with the `cbmongodb` and `cbelasticsearch` modules or roll your own.
+The module is configured by default with a single migration service that interact with your database, optionally using qb. Multiple migration services with different managers may also be configured.  The default manager for cbMigrations is `QBMigrationManager`, but you may use others, such as those included with the `cbmongodb` and `cbelasticsearch` modules or roll your own.
 
 The default configuration for the module settings are:
 
 ```cfc
 moduleSettings = {
-    "cfmigrations" : {
+    "cbMigrations" : {
         "managers" : {
             "default" : {
                 // The manager handling and executing the migration files
-                "manager" : "cfmigrations.models.QBMigrationManager",
+                "manager" : "cbMigrations.models.QBMigrationManager",
                 // The directory containing the migration files
                 "migrationsDirectory" : "/resources/database/migrations",
                 // The directory containing any seeds, if applicable
@@ -81,10 +81,10 @@ Here is an example of a multi-manager migrations system.  Each separate manager 
 
 ```cfc
 moduleSettings = {
-    "cfmigrations": {
+    "cbMigrations": {
         "managers": {
             "db1": {
-                "manager": "cfmigrations.models.QBMigrationManager",
+                "manager": "cbMigrations.models.QBMigrationManager",
                 "migrationsDirectory": "/resources/database/db1/migrations",
                 "seedsDirectory": "/resources/database/db1/seeds",
                 "properties": {
@@ -94,7 +94,7 @@ moduleSettings = {
                 }
             },
             "db2": {
-                "manager": "cfmigrations.models.QBMigrationManager",
+                "manager": "cbMigrations.models.QBMigrationManager",
                 "migrationsDirectory": "/resources/database/db2/migrations",
                 "seedsDirectory": "/resources/database/db2/seeds",
                 "properties": {
@@ -142,7 +142,7 @@ component {
 }
 ```
 
-Migration files need to follow a specific naming convention — `YYYY_MM_DD_HHMISS_[describe_your_changes_here].cfc`. This is how `cfmigrations` knows in what order to run your migrations. Generating these files is made easier with the `migrate create` command from `commandbox-migrations`.
+Migration files need to follow a specific naming convention — `YYYY_MM_DD_HHMISS_[describe_your_changes_here].cfc`. This is how `cbMigrations` knows in what order to run your migrations. Generating these files is made easier with the `migrate create` command from `commandbox-migrations`.
 
 Using the injected `qb` instance, you can insert or update required data for your application.  If you want to create test data for your application, take a look at seeders below instead.
 
@@ -152,7 +152,7 @@ There is no limit to what you can do in a migration. It is recommended that you 
 
 There are a few methods for working with migrations. (Each of these methods has a related command in `commandbox-migrations`.)
 
-These methods can be run by injecting `MigrationService@cfmigrations` - for example: `getInstance( "MigrationService@cfmigrations" ).runAllMigrations( "up" )` will run all migrations.
+These methods can be run by injecting `MigrationService@cbMigrations` - for example: `getInstance( "MigrationService@cbMigrations" ).runAllMigrations( "up" )` will run all migrations.
 
 #### `runNextMigration`
 
@@ -236,7 +236,7 @@ component {
 
 #### Setting Schema
 
-It's important to set the `schema` attribute for `cfmigrations`.  Without it, `cfmigrations` can't tell the difference
+It's important to set the `schema` attribute for `cbMigrations`.  Without it, `cbMigrations` can't tell the difference
 between a migration table installed in the schema you want and any other schema on the same database.  You can
 set the schema by calling the `setSchema( string schema )` method.
 

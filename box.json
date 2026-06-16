@@ -1,18 +1,18 @@
 {
-    "name":"CFMigrations",
+    "name":"cbMigrations",
     "version":"5.1.1",
     "location":"forgeboxStorage",
     "author":"Eric Peterson",
-    "homepage":"https://github.com/coldbox-modules/cfmigrations",
-    "documentation":"https://github.com/coldbox-modules/cfmigrations",
+    "homepage":"https://github.com/coldbox-modules/cbMigrations",
+    "documentation":"https://github.com/coldbox-modules/cbMigrations",
     "repository":{
         "type":"git",
-        "url":"https://github.com/coldbox-modules/cfmigrations"
+        "url":"https://github.com/coldbox-modules/cbMigrations"
     },
-    "bugs":"https://github.com/coldbox-modules/cfmigrations/issues",
-    "slug":"cfmigrations",
+    "bugs":"https://github.com/coldbox-modules/cbMigrations/issues",
+    "slug":"cbMigrations",
     "shortDescription":"Keep track and run your database migrations and seeders.",
-    "instructions":"https://github.com/coldbox-modules/cfmigrations",
+    "instructions":"https://github.com/coldbox-modules/cbMigrations",
     "type":"modules",
     "keywords":[
         "server",
@@ -29,7 +29,7 @@
     "license":[
         {
             "type":"MIT",
-            "URL":"https://github.com/coldbox-modules/cfmigrations/blob/master/LICENSE"
+            "URL":"https://github.com/coldbox-modules/cbMigrations/blob/master/LICENSE"
         }
     ],
     "dependencies":{
@@ -56,3 +56,4 @@
         "server.json"
     ]
 }
+

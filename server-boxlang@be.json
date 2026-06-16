@@ -1,5 +1,5 @@
 {
-    "name":"cfmigrations-boxlang@be",
+    "name":"cbmigrations-boxlang@be",
     "app":{
         "serverHomeDirectory":".engine/boxlangBE",
         "cfengine":"boxlang@be"

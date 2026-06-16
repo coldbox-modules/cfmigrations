@@ -1,5 +1,5 @@
 {
-    "name":"cfmigrations-adobe@2023",
+    "name":"cbmigrations-adobe@2023",
     "app":{
         "serverHomeDirectory":".engine/adobe2023",
         "cfengine":"adobe@2023"

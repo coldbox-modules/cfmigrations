@@ -11,9 +11,9 @@ jobs:
     continue-on-error: ${{ matrix.experimental }}
     env:
       DB_HOST: localhost
-      DB_NAME: cfmigrations_testing
-      DB_USER: cfmigrations_testing
-      DB_PASSWORD: cfmigrations_testing
+      DB_NAME: cbmigrations_testing
+      DB_USER: cbmigrations_testing
+      DB_PASSWORD: cbmigrations_testing
     strategy:
       fail-fast: false
       matrix:
@@ -31,9 +31,9 @@ jobs:
       postgres:
         image: postgres:12
         env:
-          POSTGRES_USER: cfmigrations_testing
-          POSTGRES_PASSWORD: cfmigrations_testing
-          POSTGRES_DB: cfmigrations_testing
+          POSTGRES_USER: cbmigrations_testing
+          POSTGRES_PASSWORD: cbmigrations_testing
+          POSTGRES_DB: cbmigrations_testing
         ports:
           - 5432
         options: >-

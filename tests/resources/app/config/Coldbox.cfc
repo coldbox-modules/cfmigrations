@@ -42,16 +42,16 @@
 		variables.moduleSettings = {
 			"quick" : { "defaultGrammar" : "PostgresGrammar@qb" },
 			"qb"    : { "defaultGrammar" : "PostgresGrammar@qb" },
-            "cfmigrations": {
+            "cbMigrations": {
                 "managers": {
                     "default": {
-                        "manager": "cfmigrations.models.QBMigrationManager",
+                        "manager": "cbMigrations.models.QBMigrationManager",
                         "migrationsDirectory": "/resources/database/migrations",
                         "seedsDirectory": "/resources/database/seeds",
                         "properties": {}
                     },
                     "db1": {
-                        "manager": "cfmigrations.models.QBMigrationManager",
+                        "manager": "cbMigrations.models.QBMigrationManager",
                         "migrationsDirectory": "/resources/database/db1/migrations",
                         "seedsDirectory": "/resources/database/db1/seeds",
                         "properties": {

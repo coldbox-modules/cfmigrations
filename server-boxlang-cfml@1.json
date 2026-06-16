@@ -1,5 +1,5 @@
 {
-    "name":"cfmigrations-boxlang-cfml@1",
+    "name":"cbmigrations-boxlang-cfml@1",
     "app":{
         "serverHomeDirectory":".engine/boxlang-cfml",
         "cfengine":"boxlang@1"

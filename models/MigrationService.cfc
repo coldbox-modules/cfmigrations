@@ -14,7 +14,7 @@ component accessors="true" {
     property name="wirebox" inject="wirebox";
     property name="configSettings" inject="box:configSettings";
     property name="environment" default="development";
-    property name="manager" default="cfmigrations.models.QBMigrationManager";
+    property name="manager" default="cbMigrations.models.QBMigrationManager";
     property name="migrationsDirectory" default="resources/database/migrations/";
     property name="seedsDirectory" default="resources/database/seeds/";
     property name="seedEnvironments" default="development";
@@ -30,7 +30,7 @@ component accessors="true" {
      * @properties
      */
     MigrationService function init(
-        any manager = "cfmigrations.models.QBMigrationManager",
+        any manager = "cbMigrations.models.QBMigrationManager",
         string migrationsDirectory = "/resources/database/migrations",
         string seedsDirectory = "/resources/database/seeds",
         any seedEnvironments = [ "development" ],

@@ -2,9 +2,13 @@ component extends="coldbox.system.testing.BaseTestCase" appMapping="/app"{
 
 	function beforeAll() {
 		super.beforeAll()
-		getController().getModuleService().registerAndActivateModule( "cfmigrations", "testingModuleRoot" )
+		getController().getModuleService().registerAndActivateModule( "cbMigrations", "testingModuleRoot" )
         // We do this here, because we manually load the module.
         getWireBox().autowire( this )
+	}
+
+	function getInstance() {
+		return getWireBox().getInstance( argumentCollection = arguments );
 	}
 
 	/**

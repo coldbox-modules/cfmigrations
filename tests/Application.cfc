@@ -1,6 +1,6 @@
 component {
 
-	this.name               = "cfmigrations-testing-suite" & hash( getCurrentTemplatePath() );
+	this.name               = "cbMigrations-testing-suite" & hash( getCurrentTemplatePath() );
 	this.sessionManagement  = true;
 	this.setClientCookies   = true;
 	this.sessionTimeout     = createTimespan( 0, 0, 15, 0 );
@@ -24,7 +24,7 @@ component {
 	this.mappings[ "/testbox" ]            = rootPath & "/testbox";
 	this.mappings[ "/resources/database" ] = testsPath & "resources/app/resources/database";
 
-	this.datasource = "cfmigrations_testing";
+	this.datasource = "cbmigrations_testing";
 
 	function onRequestStart() {
 		structDelete( application, "cbController" );

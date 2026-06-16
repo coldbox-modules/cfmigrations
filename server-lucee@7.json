@@ -1,5 +1,5 @@
 {
-    "name":"cfmigrations-lucee@7",
+    "name":"cbmigrations-lucee@7",
     "app":{
         "serverHomeDirectory":".engine/lucee7",
         "cfengine":"lucee@7"

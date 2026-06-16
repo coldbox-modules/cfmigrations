@@ -19,7 +19,7 @@ component accessors="true" {
     property name="mockData" inject="MockData@cbMockData";
     property name="defaultGrammar" default="AutoDiscover@qb";
     property name="datasource";
-    property name="migrationsTable" default="cfmigrations";
+    property name="migrationsTable" default="cbmigrations";
     property name="schema" default="";
     property name="useTransactions" default="true";
 
@@ -53,6 +53,13 @@ component accessors="true" {
         }
 
         var schema = newSchemaBuilder();
+
+        // v6 renamed the default migrations table from `cfmigrations` to `cbmigrations`.
+        // Carry forward existing migration history instead of starting fresh.
+        if ( schema.hasTable( "cfmigrations", getSchema(), { datasource: getDatasource() } ) ) {
+            schema.rename( "cfmigrations", getMigrationsTable(), { datasource: getDatasource() } );
+            return;
+        }
 
         schema.create(
             getMigrationsTable(),

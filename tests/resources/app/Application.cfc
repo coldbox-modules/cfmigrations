@@ -20,7 +20,7 @@ component {
 	// COLDBOX APPLICATION KEY OVERRIDE
 	COLDBOX_APP_KEY       = "";
 
-	this.datasource = "cfmigrations_testing";
+	this.datasource = "cbmigrations_testing";
 
 	// application start
 	public boolean function onApplicationStart() {

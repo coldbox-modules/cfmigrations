@@ -28,9 +28,9 @@ component {
      * @return coldbox.system.ioc.dsl.IDSLBuilder
      */
     function process( required definition, targetObject, targetID ) {
-        var settings = variables.injector.getInstance( dsl = "coldbox:moduleSettings:cfmigrations" );
+        var settings = variables.injector.getInstance( dsl = "coldbox:moduleSettings:cbMigrations" );
         return variables.injector.getInstance(
-            name = "MigrationService@cfmigrations",
+            name = "MigrationService@cbMigrations",
             initArguments = settings.managers[ listRest( arguments.definition.dsl, ":" ) ]
         );
     }

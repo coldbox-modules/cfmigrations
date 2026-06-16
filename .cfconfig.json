@@ -7,7 +7,7 @@
     "clientManagement":"no",
     "datasourcePreserveSingleQuotes":"false",
     "datasources":{
-        "cfmigrations_testing":{
+        "cbmigrations_testing":{
             "allowAlter":true,
             "allowCreate":true,
             "allowDelete":true,

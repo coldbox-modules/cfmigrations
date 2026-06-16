@@ -9,7 +9,7 @@ component extends="tests.resources.ModuleIntegrationSpec" {
                 var manager = migrationService.getManager();
                 expect( manager.getDefaultGrammar() ).toBe( "AutoDiscover@qb" );
                 expect( manager.getDatasource() ).toBeNull();
-                expect( manager.getMigrationsTable() ).toBe( "cfmigrations" );
+                expect( manager.getMigrationsTable() ).toBe( "cbmigrations" );
                 expect( manager.getSchema() ).toBe( "" );
                 expect( manager.getUseTransactions() ).toBeTrue();
             } );
@@ -22,7 +22,7 @@ component extends="tests.resources.ModuleIntegrationSpec" {
                 expect( manager.getDefaultGrammar() ).toBe( "MySQLGrammar@qb" );
                 expect( manager.getDatasource() ).notToBeNull();
                 expect( manager.getDatasource() ).toBe( "db1" );
-                expect( manager.getMigrationsTable() ).toBe( "cfmigrations" );
+                expect( manager.getMigrationsTable() ).toBe( "cbmigrations" );
                 expect( manager.getUseTransactions() ).toBeFalse();
             } );
         } );
