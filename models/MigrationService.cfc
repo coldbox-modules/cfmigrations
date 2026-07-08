@@ -1,4 +1,15 @@
+/**
+ * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
+ * www.ortussolutions.com
+ * ---
+ */
 component accessors="true" {
+
+    /**
+     * --------------------------------------------------------------------------
+     * DI
+     * --------------------------------------------------------------------------
+     */
 
     property name="wirebox" inject="wirebox";
     property name="configSettings" inject="box:configSettings";

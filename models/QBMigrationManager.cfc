@@ -1,4 +1,19 @@
+/**
+ * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
+ * www.ortussolutions.com
+ * ---
+ * This class is the default implementation of the IMigrationManager interface, using QueryBuilder to manage migrations and seeders in a database.
+ * It provides methods for installing, uninstalling, resetting, and running migrations and seeders.
+ * It also provides methods for checking the status of migrations and seeders, and for logging migrations as completed.
+ * It uses WireBox for dependency injection and MockData for seeding data.
+ */
 component accessors="true" {
+
+    /**
+     * --------------------------------------------------------------------------
+     * DI
+     * --------------------------------------------------------------------------
+     */
 
     property name="wirebox" inject="wirebox";
     property name="mockData" inject="MockData@cbMockData";
@@ -8,6 +23,11 @@ component accessors="true" {
     property name="schema" default="";
     property name="useTransactions" default="true";
 
+    /**
+     * --------------------------------------------------------------------------
+     * Constructor
+     * --------------------------------------------------------------------------
+     */
     public QBMigrationManager function init() {
         for ( var key in arguments ) {
             if ( !isNull( arguments[ key ] ) ) {
@@ -17,6 +37,9 @@ component accessors="true" {
         return this;
     }
 
+    /**
+     * Determines whether the migration manager is ready for operation
+     */
     boolean function isReady() {
         return isMigrationTableInstalled();
     }
@@ -70,7 +93,7 @@ component accessors="true" {
             .from( getMigrationsTable() )
             .setReturnFormat( "array" )
             .get( [ "name" ], { "datasource": getDatasource() } )
-            .map( function( row ) {
+            .map( ( row ) => {
                 return row.name;
             } );
     }
