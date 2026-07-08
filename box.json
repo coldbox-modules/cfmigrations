@@ -11,7 +11,7 @@
     },
     "bugs":"https://github.com/coldbox-modules/cfmigrations/issues",
     "slug":"cfmigrations",
-    "shortDescription":"Keep track and run your database migrations with CFML",
+    "shortDescription":"Keep track and run your database migrations and seeders.",
     "instructions":"https://github.com/coldbox-modules/cfmigrations",
     "type":"modules",
     "keywords":[
@@ -40,13 +40,11 @@
         "qb":"modules/qb/",
         "testbox":"testbox/",
         "coldbox":"tests/resources/app/coldbox/",
-        "mockdatacfc":"modules/mockdatacfc/",
-        "orgpostgresqljdbc424214lex":"orgpostgresqljdbc424214lex/"
+        "cbMockData":"modules/cbMockData/"
     },
     "devDependencies":{
-        "testbox":"^6",
-        "coldbox":"^7",
-        "orgpostgresqljdbc424214lex":"lex:https://ext.lucee.org/org.postgresql.jdbc42-42.1.4.lex"
+        "testbox":"^7",
+        "coldbox":"^8"
     },
     "ignore":[
         "**/.*",
