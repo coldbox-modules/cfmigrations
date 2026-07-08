@@ -1,4 +1,4 @@
-component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
+component extends="tests.resources.ModuleIntegrationSpec" {
 
     property name="migrationService" inject="migrationService:default";
     property name="schema" inject="provider:SchemaBuilder@qb";
@@ -10,7 +10,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
     }
 
     function run() {
-        describe( "cfmigrations", function() {
+        describe( "Migrations", function() {
             beforeEach( function() {
                 variables.migrationService.setMigrationsDirectory( "/resources/database/migrations" );
                 variables.migrationService.getManager().setMigrationsTable( "cfmigrations" );

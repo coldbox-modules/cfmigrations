@@ -1,7 +1,6 @@
 component {
 
 	function run( qb, mockData ) {
-	
 		var testUsers = mockData.mock(
 			argumentCollection = {
 				"$num"     : 20,

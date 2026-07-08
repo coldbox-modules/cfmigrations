@@ -1,14 +1,8 @@
-component extends="coldbox.system.testing.BaseTestCase" {
+component extends="coldbox.system.testing.BaseTestCase" autowire="true" appMapping="/app"{
 
 	function beforeAll() {
 		super.beforeAll();
-
 		getController().getModuleService().registerAndActivateModule( "cfmigrations", "testingModuleRoot" );
-		getWireBox().autowire( this );
-	}
-
-	function getInstance() {
-		return getWireBox().getInstance( argumentCollection = arguments );
 	}
 
 	/**
