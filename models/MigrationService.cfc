@@ -189,7 +189,12 @@ component accessors="true" {
         if ( !directoryExists( expandPath( variables.seedsDirectory ) ) ) return this;
 
         findSeeds( argumentCollection = arguments ).each( ( file ) => {
-            variables.manager.runSeed( file.componentPath, postProcessHook, preProcessHook, pretend );
+            variables.manager.runSeed(
+                file.componentPath,
+                postProcessHook,
+                preProcessHook,
+                pretend
+            );
         } );
 
         return this;
@@ -285,12 +290,12 @@ component accessors="true" {
             "name",
             "file"
         ).reduce( ( result, row ) => {
-            result.append( row );
-            return result;
-        }, [] )
-        .filter( ( item ) => {
-            return isMigrationFile( item.name );
-        } );
+                result.append( row );
+                return result;
+            }, [] )
+            .filter( ( item ) => {
+                return isMigrationFile( item.name );
+            } );
 
         var processed = variables.manager.findProcessed();
 
