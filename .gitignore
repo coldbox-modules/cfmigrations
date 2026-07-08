@@ -16,3 +16,8 @@ orgpostgresqljdbc*
 .env
 .tmp
 .vscode/**
+
+## AI
+.agents/skills
+.opencode/**
+.claude/**

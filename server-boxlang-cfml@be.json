@@ -1,7 +1,7 @@
 {
-    "name":"cfmigrations-boxlang-cfml@1",
+    "name":"cfmigrations-boxlang-cfml@be",
     "app":{
-        "serverHomeDirectory":".engine/boxlangCFMLBE",
+        "serverHomeDirectory":".engine/boxlang-cfml-be",
         "cfengine":"boxlang@be"
     },
     "web":{
