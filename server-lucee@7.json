@@ -1,8 +1,8 @@
 {
-    "name":"cfmigrations-lucee@6",
+    "name":"cfmigrations-lucee@7",
     "app":{
-        "serverHomeDirectory":".engine/lucee6",
-        "cfengine":"lucee@6"
+        "serverHomeDirectory":".engine/lucee7",
+        "cfengine":"lucee@7"
     },
     "web":{
         "http":{
