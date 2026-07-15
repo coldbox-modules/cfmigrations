@@ -49,6 +49,7 @@ jobs:
 
       - name: Initial Server Start (so lex extensions are picked up)
         env:
+          DB_DRIVER: postgresql
           DB_HOST: localhost
           DB_PORT: ${{ job.services.postgres.ports[5432] }}
           DB_NAME: cfmigrations_testing

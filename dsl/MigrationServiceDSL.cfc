@@ -19,14 +19,15 @@ component {
     }
 
     /**
-     * Creates a MigrationService from the dsl.
-     * The portion after the colon is used to identifier the manager.
-     *
-     * @definition  The dsl struct definition.
-     *
-     * @return      MigrationService
-     */
-    public MigrationService function process( required struct definition ) {
+	 * Process an incoming DSL definition and produce an object with it
+	 *
+	 * @definition   The injection dsl definition structure to process. Keys: name, dsl
+	 * @targetObject The target object we are building the DSL dependency for. If empty, means we are just requesting building
+	 * @targetID     The target ID we are building this dependency for
+	 *
+	 * @return coldbox.system.ioc.dsl.IDSLBuilder
+	 */
+	function process( required definition, targetObject, targetID ){
         var settings = variables.injector.getInstance( dsl = "coldbox:moduleSettings:cfmigrations" );
         return variables.injector.getInstance(
             name = "MigrationService@cfmigrations",
