@@ -4,7 +4,7 @@ component extends="coldbox.system.testing.BaseTestCase" appMapping="/app"{
 		super.beforeAll()
 		getController().getModuleService().registerAndActivateModule( "cfmigrations", "testingModuleRoot" )
         // We do this here, because we manually load the module.
-        getWireBox().autowire( true )
+        getWireBox().autowire( this )
 	}
 
 	/**
