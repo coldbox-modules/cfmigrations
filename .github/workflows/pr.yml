@@ -16,6 +16,13 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     name: Tests
+    continue-on-error: ${{ matrix.experimental }}
+    env:
+      DB_DRIVER: postgresql
+      DB_HOST: localhost
+      DB_NAME: cfmigrations_testing
+      DB_USER: cfmigrations_testing
+      DB_PASSWORD: cfmigrations_testing
     strategy:
       fail-fast: false
       matrix:
@@ -59,13 +66,10 @@ jobs:
           installSystemModules: true
           install: commandbox-boxlang
 
+      - name: Configure database port
+        run: echo "DB_PORT=${{ job.services.postgres.ports[5432] }}" >> "$GITHUB_ENV"
+
       - name: Initial Server Start (so lex extensions are picked up)
-        env:
-          DB_HOST: localhost
-          DB_PORT: ${{ job.services.postgres.ports[5432] }}
-          DB_NAME: cfmigrations_testing
-          DB_USER: cfmigrations_testing
-          DB_PASSWORD: cfmigrations_testing
         run: |
           box config set modules.commandbox-dotenv.checkEnvPreServerStart=false
           box server start serverConfigFile="server-${{ matrix.cfengine }}.json" --noSaveSettings --debug
@@ -77,24 +81,11 @@ jobs:
           box install ${{ matrix.coldbox }} --noSave
 
       - name: Restart server (so extensions are picked up)
-        env:
-          DB_HOST: localhost
-          DB_PORT: ${{ job.services.postgres.ports[5432] }}
-          DB_NAME: cfmigrations_testing
-          DB_USER: cfmigrations_testing
-          DB_PASSWORD: cfmigrations_testing
         run: |
           box server restart serverConfigFile="server-${{ matrix.cfengine }}.json" --debug
           sleep 30
 
       - name: Run TestBox Tests
-        env:
-          DB_HOST: localhost
-          DB_PORT: ${{ job.services.postgres.ports[5432] }}
-          DB_NAME: cfmigrations_testing
-          DB_USER: cfmigrations_testing
-          DB_PASSWORD: cfmigrations_testing
-        continue-on-error: ${{ matrix.experimental }}
         run: box testbox run
 
   format:
