@@ -15,7 +15,7 @@
     "jvm":{
         "heapSize":"1024",
         "javaVersion":"openjdk21_jre",
-        "args": [
+        "args":[
             "-Dcoldfusion.runtime.remotemethod.matchArguments=false"
         ]
     },

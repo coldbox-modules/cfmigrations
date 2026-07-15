@@ -1,9 +1,9 @@
-component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
+component extends="tests.resources.ModuleIntegrationSpec" {
 
     function run() {
         describe( "MigrationService", function() {
             it( "can instantiate with a default migration manager", function() {
-                var migrationService = application.wirebox.getInstance( "migrationService:default" );
+                var migrationService = getInstance( "migrationService:default" );
                 expect( migrationService.getMigrationsDirectory() ).toBe( "/resources/database/migrations" );
                 expect( migrationService.getSeedsDirectory() ).toBe( "/resources/database/seeds" );
                 var manager = migrationService.getManager();
@@ -15,7 +15,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
             } );
 
             it( "can instantiate with different named migration managers", function() {
-                var migrationService = application.wirebox.getInstance( "migrationService:db1" );
+                var migrationService = getInstance( "migrationService:db1" );
                 expect( migrationService.getMigrationsDirectory() ).toBe( "/resources/database/db1/migrations" );
                 expect( migrationService.getSeedsDirectory() ).toBe( "/resources/database/db1/seeds" );
                 var manager = migrationService.getManager();

@@ -26,144 +26,17 @@
             "password":"${DB_PASSWORD}",
             "port":"${DB_PORT}",
             "username":"${DB_USER}",
-            "bundleName": "org.postgresql.jdbc42",
-            "bundleVersion": "42.1.4"
+            "bundleVersion": "42.7.10"
         }
     },
     "debuggingEnabled":"no",
-    "hspw":"60abc89ecb83cbfab1fbf5260cdac3eb1266a66dcdcf0e242baeeb498aeb5756",
-    "loggers":{
-        "application":{
-            "appender":"resource",
-            "appenderArguments":{
-                "path":"{lucee-config}/logs/application.log"
-            },
-            "layout":"classic"
-        },
-        "datasource":{
-            "appender":"resource",
-            "appenderArguments":{
-                "path":"{lucee-config}/logs/datasource.log"
-            },
-            "layout":"classic"
-        },
-        "deploy":{
-            "appender":"resource",
-            "appenderArguments":{
-                "path":"{lucee-config}/logs/deploy.log"
-            },
-            "layout":"classic",
-            "level":"info"
-        },
-        "exception":{
-            "appender":"resource",
-            "appenderArguments":{
-                "path":"{lucee-config}/logs/exception.log"
-            },
-            "layout":"classic"
-        },
-        "gateway":{
-            "appender":"resource",
-            "appenderArguments":{
-                "path":"{lucee-config}/logs/gateway.log"
-            },
-            "layout":"classic"
-        },
-        "mail":{
-            "appender":"resource",
-            "appenderArguments":{
-                "path":"{lucee-config}/logs/mail.log"
-            },
-            "layout":"classic"
-        },
-        "mapping":{
-            "appender":"resource",
-            "appenderArguments":{
-                "path":"{lucee-config}/logs/mapping.log"
-            },
-            "layout":"classic"
-        },
-        "memory":{
-            "appender":"resource",
-            "appenderArguments":{
-                "path":"{lucee-config}/logs/memory.log"
-            },
-            "layout":"classic"
-        },
-        "orm":{
-            "appender":"resource",
-            "appenderArguments":{
-                "path":"{lucee-config}/logs/orm.log"
-            },
-            "layout":"classic"
-        },
-        "remoteclient":{
-            "appender":"resource",
-            "appenderArguments":{
-                "path":"{lucee-config}/logs/remoteclient.log"
-            },
-            "layout":"classic",
-            "level":"info"
-        },
-        "requesttimeout":{
-            "appender":"resource",
-            "appenderArguments":{
-                "path":"{lucee-config}/logs/requesttimeout.log"
-            },
-            "layout":"classic"
-        },
-        "rest":{
-            "appender":"resource",
-            "appenderArguments":{
-                "path":"{lucee-config}/logs/rest.log"
-            },
-            "layout":"classic"
-        },
-        "scheduler":{
-            "appender":"resource",
-            "appenderArguments":{
-                "path":"{lucee-config}/logs/scheduler.log"
-            },
-            "layout":"classic"
-        },
-        "scope":{
-            "appender":"resource",
-            "appenderArguments":{
-                "path":"{lucee-config}/logs/scope.log"
-            },
-            "layout":"classic"
-        },
-        "search":{
-            "appender":"resource",
-            "appenderArguments":{
-                "path":"{lucee-config}/logs/search.log"
-            },
-            "layout":"classic"
-        },
-        "thread":{
-            "appender":"resource",
-            "appenderArguments":{
-                "path":"{lucee-config}/logs/thread.log"
-            },
-            "layout":"classic"
-        },
-        "trace":{
-            "appender":"resource",
-            "appenderArguments":{
-                "path":"{lucee-config}/logs/trace.log"
-            },
-            "layout":"classic"
-        }
-    },
-    "mailConnectionTimeout":"30",
-    "mailSpoolEnable":"yes",
-    "mergeURLAndForm":"no",
-    "scopeCascading":"standard",
-    "searchResultsets":"yes",
-    "sessionManagement":"yes",
-    "sessionTimeout":"0,0,30,0",
     "systemErr":"default",
     "systemOut":"null",
-    "timeServer":"pool.ntp.org",
-    "updateSiteURL":"http://release.lucee.org"
+    "extensions": [
+        {
+            "id": "671B01B8-B3B3-42B9-AC055A356BED5281",
+            "name": "PostgreSQL JDBC Driver",
+            "version": "42.7.10"
+        }
+    ]
 }

@@ -1,4 +1,15 @@
+/**
+ * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
+ * www.ortussolutions.com
+ * ---
+ */
 component accessors="true" {
+
+    /**
+     * --------------------------------------------------------------------------
+     * DI
+     * --------------------------------------------------------------------------
+     */
 
     property name="wirebox" inject="wirebox";
     property name="configSettings" inject="box:configSettings";
@@ -8,7 +19,6 @@ component accessors="true" {
     property name="seedsDirectory" default="resources/database/seeds/";
     property name="seedEnvironments" default="development";
     property name="managerProperties";
-
 
     /**
      * Initializes the Migration Service instance
@@ -29,10 +39,10 @@ component accessors="true" {
         variables.managerProperties = {};
         var args = arguments;
         args.keyArray()
-            .filter( function( key ) {
+            .filter( ( key ) => {
                 return !isNull( args[ key ] );
             } )
-            .each( function( key ) {
+            .each( ( key ) => {
                 if ( isSimpleValue( args[ key ] ) ) {
                     // For some reason Lucee only picks up the `invoke` and ACF only picks up the scope assignment.
                     invoke( this, "set" & key, { "#key#": args[ key ] } );
@@ -49,6 +59,9 @@ component accessors="true" {
         return this;
     }
 
+    /**
+     * Initializes the Migration Service instance after DI is complete
+     */
     function onDIComplete() {
         if ( isSimpleValue( variables.manager ) ) {
             variables.manager = variables.wirebox.getInstance(
@@ -98,7 +111,7 @@ component accessors="true" {
      * Resets the migrations to a new state
      */
     public void function reset() {
-        return variables.manager.reset();
+        variables.manager.reset();
     }
 
     /**
@@ -175,8 +188,13 @@ component accessors="true" {
 
         if ( !directoryExists( expandPath( variables.seedsDirectory ) ) ) return this;
 
-        findSeeds( argumentCollection = arguments ).each( function( file ) {
-            variables.manager.runSeed( file.componentPath, postProcessHook, preProcessHook, pretend );
+        findSeeds( argumentCollection = arguments ).each( ( file ) => {
+            variables.manager.runSeed(
+                file.componentPath,
+                postProcessHook,
+                preProcessHook,
+                pretend
+            );
         } );
 
         return this;
@@ -259,7 +277,7 @@ component accessors="true" {
     }
 
     /**
-     * Returns all available migrations within a director
+     * Returns all available migrations within a directory
      *
      * @directory string the directory to list
      */
@@ -268,14 +286,14 @@ component accessors="true" {
             expandPath( arguments.directory ),
             false,
             "query",
-            "*.cfc",
+            "*.cfc|*.bx",
             "name",
             "file"
-        ).reduce( function( result, row ) {
+        ).reduce( ( result, row ) => {
                 result.append( row );
                 return result;
             }, [] )
-            .filter( function( item ) {
+            .filter( ( item ) => {
                 return isMigrationFile( item.name );
             } );
 
@@ -284,9 +302,9 @@ component accessors="true" {
         var prequisitesInstalled = true;
         var managerIsReady = variables.manager.isReady();
 
-        var migrations = migrationFiles.map( function( file ) {
+        var migrations = migrationFiles.map( ( file ) => {
             var timestamp = extractTimestampFromFileName( file.name );
-            var componentName = left( file.name, len( file.name ) - 4 );
+            var componentName = reReplaceNoCase( file.name, "\.(cfc|bx)$", "" );
             var migrationRan = managerIsReady ? processed.contains( componentName ) : false;
 
             var migration = {
@@ -357,15 +375,15 @@ component accessors="true" {
             expandPath( variables.seedsDirectory ),
             false,
             "query",
-            arguments.keyExists( "seedName" ) ? arguments.seedName & ".cfc" : "*.cfc",
+            isNull( arguments.seedName ) ? "*.cfc|*.bx" : arguments.seedName & ".cfc|*.bx",
             "name",
             "file"
-        ).reduce( function( result, row ) {
+        ).reduce( ( result, row ) => {
                 result.append( row );
                 return result;
             }, [] )
-            .map( function( file ) {
-                var componentName = left( file.name, len( file.name ) - 4 );
+            .map( ( file ) => {
+                var componentName = reReplaceNoCase( file.name, "\.(cfc|bx)$", "" );
                 structAppend(
                     file,
                     {
@@ -389,7 +407,7 @@ component accessors="true" {
      */
     public boolean function hasMigrationsToRun( direction ) {
         return !!findAll()
-            .filter( function( migration ) {
+            .filter( ( migration ) => {
                 return direction == "up" ? !migration.migrated : migration.migrated;
             } )
             .len();

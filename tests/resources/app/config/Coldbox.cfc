@@ -3,7 +3,7 @@
 	// Configure ColdBox Application
 	function configure() {
 		// coldbox directives
-		coldbox = {
+		variables.coldbox = {
 			// Application Setup
 			appName                  : "Your app name here",
 			eventName                : "event",
@@ -39,7 +39,7 @@
 			viewCaching              : false
 		};
 
-		moduleSettings = {
+		variables.moduleSettings = {
 			"quick" : { "defaultGrammar" : "PostgresGrammar@qb" },
 			"qb"    : { "defaultGrammar" : "PostgresGrammar@qb" },
             "cfmigrations": {
@@ -65,15 +65,15 @@
 		};
 
 		// custom settings
-		settings = {};
+		variables.settings = {};
 
 		// environment settings, create a detectEnvironment() method to detect it yourself.
 		// create a function with the name of the environment so it can be executed if that environment is detected
 		// the value of the environment is a list of regex patterns to match the cgi.http_host.
-		environments = { development : "localhost,^127\.0\.0\.1" };
+		variables.environments = { development : "localhost,^127\.0\.0\.1" };
 
 		// Module Directives
-		modules = {
+		variables.modules = {
 			// Turn to false in production
 			autoReload : false,
 			// An array of modules names to load, empty means all of them
@@ -83,7 +83,7 @@
 		};
 
 		// LogBox DSL
-		logBox = {
+		variables.logBox = {
 			// Define Appenders
 			appenders : { coldboxTracer : { class : "coldbox.system.logging.appenders.ConsoleAppender" } },
 			// Root Logger
@@ -93,27 +93,27 @@
 		};
 
 		// Layout Settings
-		layoutSettings = { defaultLayout : "", defaultView : "" };
+		variables.layoutSettings = { defaultLayout : "", defaultView : "" };
 
 		// Interceptor Settings
-		interceptorSettings = {
+		variables.interceptorSettings = {
 			throwOnInvalidStates     : false,
 			customInterceptionPoints : ""
 		};
 
 		// Register interceptors as an array, we need order
-		interceptors = [];
+		variables.interceptors = [];
 
 		/*
 		// module setting overrides
-		moduleSettings = {
+		variables.moduleSettings = {
 			moduleName = {
 				settingName = "overrideValue"
 			}
 		};
 
 		// flash scope configuration
-		flash = {
+		variables.flash = {
 			scope = "session,client,cluster,ColdboxCache,or full path",
 			properties = {}, // constructor properties for the flash scope implementation
 			inflateToRC = true, // automatically inflate flash data into the RC scope
@@ -123,7 +123,7 @@
 		};
 
 		//Register Layouts
-		layouts = [
+		variables.layouts = [
 			{ name = "login",
 		 	  file = "Layout.tester.cfm",
 			  views = "vwLogin,test",
@@ -132,7 +132,7 @@
 		];
 
 		//Conventions
-		conventions = {
+		variables.conventions = {
 			handlersLocation = "handlers",
 			viewsLocation 	 = "views",
 			layoutsLocation  = "layouts",
@@ -141,7 +141,7 @@
 		};
 
 		//Datasources
-		datasources = {
+		variables.datasources = {
 			mysite   = {name="mySite", dbType="mysql", username="root", password="pass"},
 			blog_dsn = {name="myBlog", dbType="oracle", username="root", password="pass"}
 		};
@@ -152,7 +152,7 @@
 	 * Development environment
 	 */
 	function development() {
-		coldbox.customErrorTemplate = "/coldbox/system/includes/BugReport.cfm";
+		variables.coldbox.customErrorTemplate = "/coldbox/system/exceptions/Whoops.cfm";
 	}
 
 }

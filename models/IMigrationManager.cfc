@@ -1,3 +1,11 @@
+/**
+ * Copyright Since 2005 ColdBox Framework by Luis Majano and Ortus Solutions, Corp
+ * www.ortussolutions.com
+ * ---
+ * Defines the interface for a migration manager.
+ * A migration manager is responsible for managing the migrations and seeders for a specific database or data source.
+ * It provides methods for installing, uninstalling, resetting, and running migrations and seeders.
+ */
 interface {
 
     public boolean function isReady();
@@ -59,6 +67,11 @@ interface {
      *
      * @invocationPath the component invocation path for the seed
      */
-    public void function runSeed( required string invocationPath, function postProcessHook, function preProcessHook, boolean pretend );
+    public void function runSeed(
+        required string invocationPath,
+        function postProcessHook,
+        function preProcessHook,
+        boolean pretend
+    );
 
 }

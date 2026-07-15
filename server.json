@@ -1,6 +1,6 @@
 {
     "app":{
-        "cfengine":"lucee@5"
+        "cfengine":"boxlang@1"
     },
     "cfconfigfile":"",
     "web":{
