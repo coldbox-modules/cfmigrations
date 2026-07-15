@@ -304,7 +304,7 @@ component accessors="true" {
 
         var migrations = migrationFiles.map( ( file ) => {
             var timestamp = extractTimestampFromFileName( file.name );
-            var componentName = left( file.name, len( file.name ) - 4 );
+            var componentName = reReplaceNoCase( file.name, "\.(cfc|bx)$", "" );
             var migrationRan = managerIsReady ? processed.contains( componentName ) : false;
 
             var migration = {
@@ -383,7 +383,7 @@ component accessors="true" {
                 return result;
             }, [] )
             .map( ( file ) => {
-                var componentName = left( file.name, len( file.name ) - 4 );
+                var componentName = reReplaceNoCase( file.name, "\.(cfc|bx)$", "" );
                 structAppend(
                     file,
                     {
