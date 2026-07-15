@@ -43,7 +43,7 @@
         "cbMockData":"modules/cbMockData/"
     },
     "devDependencies":{
-        "testbox":"^7",
+        "testbox":"be",
         "coldbox":"^8"
     },
     "ignore":[
