@@ -10,7 +10,6 @@ component extends="tests.resources.ModuleIntegrationSpec" {
     }
 
     function run() {
-
         describe( "Migrations", function() {
             beforeEach( function() {
                 variables.migrationService.setMigrationsDirectory( "/resources/database/migrations" );
