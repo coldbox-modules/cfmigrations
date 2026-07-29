@@ -1,11 +1,3 @@
-# v5.1.2
-## 29 Jul 2026 — 00:00:00 UTC
-
-### fix
-
-+ __MigrationService:__ Normalize Windows backslashes in migration and seed component paths to prevent `ClassNotFoundBoxLangException` on Windows ([d680a1f](https://github.com/coldbox-modules/cfmigrations/commit/d680a1f))
-
-
 # v5.1.1
 ## 06 Apr 2026 — 19:58:21 UTC
 
