@@ -45,6 +45,9 @@ component accessors="true" {
             .each( ( key ) => {
                 if ( isSimpleValue( args[ key ] ) ) {
                     // For some reason Lucee only picks up the `invoke` and ACF only picks up the scope assignment.
+                    if ( key == "migrationsDirectory" || key == "seedsDirectory" ) {
+                        args[ key ] = replace( args[ key ], "\\", "/", "all" );
+                    }
                     invoke( this, "set" & key, { "#key#": args[ key ] } );
                     variables[ key ] = args[ key ];
                 } else if ( key == "properties" ) {
@@ -312,7 +315,7 @@ component accessors="true" {
                 componentName: componentName,
                 absolutePath: file.directory & "/" & file.name,
                 componentPath: listChangeDelims(
-                    directory & "/" & componentName,
+                    replace( directory, "\", "/", "all" ) & "/" & componentName,
                     ".",
                     "/",
                     false
@@ -389,7 +392,7 @@ component accessors="true" {
                     {
                         "componentName": componentName,
                         "componentPath": listChangeDelims(
-                            variables.seedsDirectory & "/" & componentName,
+                            replace( variables.seedsDirectory, "\", "/", "all" ) & "/" & componentName,
                             ".",
                             "/",
                             false
