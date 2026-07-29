@@ -389,7 +389,12 @@ component accessors="true" {
                     {
                         "componentName": componentName,
                         "componentPath": listChangeDelims(
-                            replace( variables.seedsDirectory, "\", "/", "all" ) & "/" & componentName,
+                            replace(
+                                variables.seedsDirectory,
+                                "\",
+                                "/",
+                                "all"
+                            ) & "/" & componentName,
                             ".",
                             "/",
                             false
