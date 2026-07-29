@@ -312,7 +312,7 @@ component accessors="true" {
                 componentName: componentName,
                 absolutePath: file.directory & "/" & file.name,
                 componentPath: listChangeDelims(
-                    directory & "/" & componentName,
+                    replace( directory, "\", "/", "all" ) & "/" & componentName,
                     ".",
                     "/",
                     false
@@ -389,7 +389,7 @@ component accessors="true" {
                     {
                         "componentName": componentName,
                         "componentPath": listChangeDelims(
-                            variables.seedsDirectory & "/" & componentName,
+                            replace( variables.seedsDirectory, "\", "/", "all" ) & "/" & componentName,
                             ".",
                             "/",
                             false
